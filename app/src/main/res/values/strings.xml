@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Child-Control-App</string>
+
+    <!--Common -->
+    <string name="child_control">Protect your child!!</string>
+    <string name="parent_tag_line">Join today to monitor your childs online activity</string>
+    <string name="login">Login</string>
+    <string name="register">Sign Up</string>
+    <string name="about">About</string>
+</resources>
