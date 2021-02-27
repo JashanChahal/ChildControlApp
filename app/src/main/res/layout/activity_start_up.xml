@@ -53,25 +53,28 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/login_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_button"
-                android:text="@string/login"
-                android:textColor="@color/black"
                 android:backgroundTint="@color/design_default_color_secondary"
-                />
+                android:text="@string/login"
+                android:onClick="renderLogin"
+                android:transitionName="transition_login"
+                android:textColor="@color/black" />
 
             <Button
+                android:id="@+id/signup_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/design_default_color_secondary"
                 android:text="@string/register"
-                android:textColor="@color/black"
-                android:backgroundTint="@color/design_default_color_secondary"/>
+                android:textColor="@color/black" />
 
         </LinearLayout>
 

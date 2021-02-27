@@ -7,4 +7,9 @@
     <string name="login">Login</string>
     <string name="register">Sign Up</string>
     <string name="about">About</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="forget_password">Forgot Password</string>
+    <string name="create_account">Create Account</string>
+
 </resources>
