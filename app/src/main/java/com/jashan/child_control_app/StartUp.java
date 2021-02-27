@@ -2,16 +2,15 @@ package com.jashan.child_control_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 
 import com.jashan.child_control_app.common.Login;
+import com.jashan.child_control_app.common.Register;
+import com.jashan.child_control_app.utils.ActivityTransition;
 
 public class StartUp extends AppCompatActivity {
-    private boolean isLoggedIn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,13 +18,11 @@ public class StartUp extends AppCompatActivity {
 
     }
 
-    public void renderLogin(View view) {
-        Intent intent = new Intent(this,Login.class);
-        Pair[] pairs = new Pair[1];
+    public void goToLogin(View view) {
+        ActivityTransition.goToActivity(this, Login.class);
+    }
 
-        pairs[0] = new Pair<View,String>(findViewById(R.id.login_btn),"transition_login");
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,pairs);
-
-        startActivity(intent,options.toBundle());
+    public void goToRegister(View view) {
+        ActivityTransition.goToActivity(this, Register.class);
     }
 }

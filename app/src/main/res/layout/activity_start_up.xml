@@ -19,8 +19,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:src="@drawable/lock"
-            />
+            android:src="@drawable/lock" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,10 +39,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/muli_light"
             android:text="@string/parent_tag_line"
             android:textAlignment="center"
-            android:layout_marginTop="20dp"
             android:textColor="@color/black"></TextView>
 
         <LinearLayout
@@ -60,10 +59,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="@color/design_default_color_secondary"
+                android:onClick="goToLogin"
                 android:text="@string/login"
-                android:onClick="renderLogin"
-                android:transitionName="transition_login"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:transitionName="transition_login" />
 
             <Button
                 android:id="@+id/signup_btn"
@@ -73,8 +72,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="@color/design_default_color_secondary"
+                android:onClick="goToRegister"
                 android:text="@string/register"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:transitionName="transition_signup" />
 
         </LinearLayout>
 
