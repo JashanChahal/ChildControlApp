@@ -40,11 +40,12 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/muli_light"
-                android:hint="@string/enter_username"
+                android:hint="@string/enter_email"
                 android:textColorHint="@color/black"
                 app:boxStrokeColor="@color/black"
                 app:boxStrokeWidthFocused="2dp"
@@ -56,11 +57,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    android:inputType="text" />
+                    android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -114,7 +116,8 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/rounded_button"
                 android:text="@string/login"
-                android:textColor="@color/black"></Button>
+                android:textColor="@color/black"
+                android:onClick="login"></Button>
 
             <Button
                 android:layout_width="wrap_content"
@@ -126,6 +129,14 @@
                 android:background="#00000000"
                 android:onClick="goToRegister"
                 android:text="@string/create_account"></Button>
+
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                />
 
 
         </LinearLayout>

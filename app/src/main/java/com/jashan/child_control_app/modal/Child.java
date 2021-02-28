@@ -20,5 +20,15 @@ public class Child implements User {
         return this.parentEmail;
     }
 
+    @Override
+    public String setUserName(String userName) {
+        return null;
+    }
+
+    @Override
+    public String setUserEmail(String userEmail) {
+        return null;
+    }
+
 
 }
