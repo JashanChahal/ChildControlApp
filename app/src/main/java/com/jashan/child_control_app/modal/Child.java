@@ -1,23 +1,28 @@
 package com.jashan.child_control_app.modal;
 
+import androidx.annotation.NonNull;
+
 public class Child implements User {
-    private String name;
+    private String userName;
+    private String userEmail;
     private String parentEmail;
-    private Parent parent;
+    private String type;
 
-    public Child(String name, String email) {
-        this.name = name;
-        this.parentEmail = email;
+    public Child(String name, String email, String parentEmail) {
+        this.userName = name;
+        this.userEmail = email;
+        this.parentEmail = parentEmail;
+        this.type = "Child";
     }
-
+    public Child(){}
     @Override
     public String getUserName() {
-        return this.name;
+        return this.userName;
     }
 
     @Override
     public String getUserEmail() {
-        return this.parentEmail;
+        return this.userEmail;
     }
 
     @Override
@@ -25,10 +30,26 @@ public class Child implements User {
         return null;
     }
 
+    public String getType() {
+        return type;
+    }
+
     @Override
     public String setUserEmail(String userEmail) {
         return null;
     }
 
+    public String getParentEmail() {
+        return parentEmail;
+    }
 
+    public void setParentEmail(String parentEmail) {
+        this.parentEmail = parentEmail;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.userName;
+    }
 }

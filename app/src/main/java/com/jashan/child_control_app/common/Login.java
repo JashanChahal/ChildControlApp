@@ -3,6 +3,7 @@ package com.jashan.child_control_app.common;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -16,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.StartUp;
+import com.jashan.child_control_app.parent.ParentHomepage;
 import com.jashan.child_control_app.utils.ActivityTransition;
 
 public class Login extends AppCompatActivity {
@@ -61,7 +63,9 @@ public class Login extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(Login.this,"logged in",Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(Login.this, ParentHomepage.class);
+                            intent.putExtra("UID",user.getUid());
+                            startActivity(intent);
                         } else {
                             Toast.makeText(Login.this, "Email or Password is wrong", Toast.LENGTH_LONG).show();
                         }

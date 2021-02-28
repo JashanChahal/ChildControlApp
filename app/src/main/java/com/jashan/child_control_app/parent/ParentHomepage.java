@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,28 +28,28 @@ public class ParentHomepage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_homepage);
-        TextView textView = findViewById(R.id.textView);
-        String id = getIntent().getStringExtra("USER_ID");
-
+        String id = getIntent().getStringExtra("UID");
+        TextView userName = findViewById(R.id.profile_username);
+        TextView email = findViewById(R.id.profile_email);
+        TextView children = findViewById(R.id.profile_children);
+        ProgressBar progressBar = findViewById(R.id.progressBar3);
         DatabaseReference query = database.getReference("users");
-        query.child(id).addValueEventListener(new ValueEventListener() {
+        progressBar.setVisibility(View.VISIBLE);
+        query.child("parent/"+id).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onSuccess(DataSnapshot snapshot) {
+                progressBar.setVisibility(View.GONE);
                 Parent parent = snapshot.getValue(Parent.class);
-                Log.v("sf", snapshot.toString());
+
                 if (parent != null) {
-                    textView.setText(parent.getUserName());
-                    Log.v("fs", parent.toString());
+                    userName.setText(parent.getUserName());
+                    email.setText(parent.getUserEmail());
                 } else {
-                    textView.setText("null");
+                    Log.v("sf", "null");
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.v("Err", "failed");
-            }
         });
+
 
     }
 }

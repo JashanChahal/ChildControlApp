@@ -6,4 +6,5 @@ public interface User  {
     public String getUserEmail();
     public String setUserName(String userName);
     public String setUserEmail(String userEmail);
+    public String getType();
 }

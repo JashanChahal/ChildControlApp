@@ -19,5 +19,6 @@
     <string name="forget_password">Forgot Password</string>
     <string name="create_account">Create Account</string>
     <string name="enter_fullname">Full Name</string>
-
+    <string name="username_title">UserName</string>
+    <string name="children">Children</string>
 </resources>

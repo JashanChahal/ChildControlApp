@@ -22,8 +22,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.ktx.Firebase;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.StartUp;
 import com.jashan.child_control_app.modal.Child;
@@ -72,7 +76,6 @@ public class Register extends AppCompatActivity {
         addEmailListener(formElements.get("EMAIL"));
         addEmailListener(formElements.get("PARENT_EMAIL"));
         addValidateListener(formElements.get("PASSWORD"), 5, "Password");
-        addValidateListener(formElements.get("PARENT_PASSWORD"), 5, "Password");
         addMatchPasswordListener(formElements.get("CONFIRM_PASSWORD"));
     }
 
@@ -144,7 +147,7 @@ public class Register extends AppCompatActivity {
         if (inputData.isParent()) {
             registerUserAndRedirect(inputData.getEmail(), inputData.getPassword(), inputData.getUserName());
         } else {
-            registerChild(inputData.getParentEmail(), inputData.getParentPassword(), inputData.getUserName());
+            registerChild(inputData.getEmail(), inputData.getPassword(), inputData.getUserName(), inputData.getParentEmail());
         }
 
     }
@@ -159,9 +162,9 @@ public class Register extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            writeNewUser(user.getUid(), userName, email);
+                            writeNewUser(user.getUid(), new Parent(userName, email, user.getUid()), "parent");
                             Intent intent = new Intent(Register.this, ParentHomepage.class);
-                            intent.putExtra("USER_ID", user.getUid());
+                            intent.putExtra("UID", user.getUid());
                             startActivity(intent);
                         } else {
                             Toast.makeText(Register.this, "failed", Toast.LENGTH_LONG).show();
@@ -172,38 +175,59 @@ public class Register extends AppCompatActivity {
 
     }
 
-    public void writeNewUser(String userId, String name, String email) {
+    public void writeNewUser(String userId, User user, String type) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        User user = new Parent(name, email);
-        mDatabase.child("users").child(userId).setValue(user);
+        mDatabase.child("users").child(type).child(userId).setValue(user);
     }
 
-    private void registerChild(String parentEmail, String parentPassword, String childName) {
+    private void registerChild(String childEmail, String childPassword, String childName, String parentEmail) {
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-
-        mAuth.signInWithEmailAndPassword(parentEmail, parentPassword).addOnCompleteListener(this,
-                new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(childEmail, childPassword)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
-
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            addChildToParent(user.getUid(), childName, parentEmail);
+                            User child = new Child(childName, childEmail, parentEmail);
+                            writeNewUser(user.getUid(), child, "child");
+                            addChildToParent((Child) child);
                         } else {
-                            Toast.makeText(Register.this, "Email or Password is wrong", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Register.this, "failed", Toast.LENGTH_LONG).show();
+
                         }
                     }
                 });
+
     }
 
-    private void addChildToParent(String uid, String childName, String parentEmail) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        Map<String, Object> update = new HashMap<>();
-        update.put("/users/" + uid + "/children/" + childName + "/parent", uid);
-        mDatabase.updateChildren(update);
+    private void addChildToParent(Child child) {
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
+        mDatabase.child("parent")
+                .orderByChild("userEmail")
+                .equalTo(child.getParentEmail().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Parent parent = snapshot.getChildren().iterator().next().getValue(Parent.class);
+                if (parent != null) {
+                    if (parent.getChildren() == null) {
+                        parent.setChildren(new ArrayList<>());
+                    }
+                    parent.getChildren().add(child);
+                    Map<String, Object> update = new HashMap<>();
+                    update.put("/users/parent/" + parent.getUserId(), parent);
+                    FirebaseDatabase.getInstance().getReference().updateChildren(update);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.v("testing", "failed");
+            }
+        });
     }
 
     private void setFormElements() {
@@ -213,35 +237,25 @@ public class Register extends AppCompatActivity {
         TextInputLayout confirmPasswordTextLayout = (TextInputLayout) findViewById(R.id.parent_register_confirmpassword);
         TextInputLayout userNameTextLayout = (TextInputLayout) findViewById(R.id.username);
         TextInputLayout parentEmail = findViewById(R.id.parent_email);
-        TextInputLayout parentPassword = findViewById(R.id.child_register_password);
 
         formElements.put("EMAIL", emailTextLayout);
         formElements.put("PASSWORD", passwordTextLayout);
         formElements.put("CONFIRM_PASSWORD", confirmPasswordTextLayout);
         formElements.put("USER_NAME", userNameTextLayout);
         formElements.put("PARENT_EMAIL", parentEmail);
-        formElements.put("PARENT_PASSWORD", parentPassword);
     }
 
     // Form elements that will appear when a parent fills the form
     private void setParentFormElements() {
         parentFormElements = new ArrayList<>();
-        TextInputLayout password = findViewById(R.id.parent_register_password);
-        TextInputLayout confirmPassword = findViewById(R.id.parent_register_confirmpassword);
-        TextInputLayout email = findViewById(R.id.email);
-        parentFormElements.add(password);
-        parentFormElements.add(confirmPassword);
-        parentFormElements.add(email);
+
     }
 
     // Form element that will appear when form is filled on child's phone
     private void setChildFormElements() {
         childFormElements = new ArrayList<>();
         TextInputLayout parentEmail = findViewById(R.id.parent_email);
-        TextInputLayout parentPassword = findViewById(R.id.child_register_password);
-
         childFormElements.add(parentEmail);
-        childFormElements.add(parentPassword);
     }
 
     public void goBackToStartUp(View view) {
@@ -294,7 +308,6 @@ public class Register extends AppCompatActivity {
         private TextInputLayout confirmPasswordTextLayout;
         private TextInputLayout userNameTextLayout;
         private TextInputLayout parentEmailTextLayout;
-        private TextInputLayout parentPasswordTextLayout;
 
         public InputData(boolean isParent) {
             this.isParent = isParent;
@@ -303,7 +316,6 @@ public class Register extends AppCompatActivity {
             this.confirmPasswordTextLayout = (TextInputLayout) findViewById(R.id.parent_register_confirmpassword);
             this.userNameTextLayout = (TextInputLayout) findViewById(R.id.username);
             this.parentEmailTextLayout = (TextInputLayout) findViewById(R.id.parent_email);
-            this.parentPasswordTextLayout = findViewById(R.id.child_register_password);
 
         }
 
@@ -311,11 +323,10 @@ public class Register extends AppCompatActivity {
             boolean isVerified = true;
 
             if (emailTextLayout.isErrorEnabled()
-                    || (isParent() && passwordTextLayout.isErrorEnabled())
-                    || (isParent() && confirmPasswordTextLayout.isErrorEnabled())
+                    || (passwordTextLayout.isErrorEnabled())
+                    || (confirmPasswordTextLayout.isErrorEnabled())
                     || userNameTextLayout.isErrorEnabled()
                     || (isChild() && parentEmailTextLayout.isErrorEnabled()
-                    || (isChild() && parentPasswordTextLayout.isErrorEnabled())
             )
             ) {
                 isVerified = false;
@@ -342,12 +353,12 @@ public class Register extends AppCompatActivity {
         }
 
         public String getPassword() {
-            return isParent() ? passwordTextLayout.getEditText().getText().toString() : null;
+            return passwordTextLayout.getEditText().getText().toString();
 
         }
 
         public String getConfirmPassword() {
-            return isChild() ? confirmPasswordTextLayout.getEditText().getText().toString() : null;
+            return confirmPasswordTextLayout.getEditText().getText().toString();
 
         }
 
@@ -355,9 +366,6 @@ public class Register extends AppCompatActivity {
             return isChild() ? parentEmailTextLayout.getEditText().getText().toString() : null;
         }
 
-        public String getParentPassword() {
-            return isChild() ? parentPasswordTextLayout.getEditText().getText().toString() : null;
-        }
 
     }
 }
