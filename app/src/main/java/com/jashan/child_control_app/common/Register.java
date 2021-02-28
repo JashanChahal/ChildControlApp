@@ -54,8 +54,8 @@ public class Register extends AppCompatActivity {
         childFormElements.add(parentUsername);
     }
 
-    public void goToStartUp(View view) {
-        ActivityTransition.goToActivity(this, StartUp.class);
+    public void goBackToStartUp(View view) {
+        ActivityTransition.goBack(this, StartUp.class);
     }
 
     public void goToLogin(View view) {
@@ -65,7 +65,7 @@ public class Register extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.transition.enter, R.transition.exit);
+        overridePendingTransition(R.transition.enter_back, R.transition.back);
     }
 
     public void renderForm(View view) {

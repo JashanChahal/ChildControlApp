@@ -12,4 +12,9 @@ public class ActivityTransition {
         context.startActivity(intent);
         context.overridePendingTransition(R.transition.enter,R.transition.exit);
     }
+    public static void goBack(Activity context, Class activityClass) {
+        Intent intent = new Intent(context, activityClass);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.transition.enter_back,R.transition.back);
+    }
 }

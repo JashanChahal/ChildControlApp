@@ -20,8 +20,8 @@
             android:layout_width="15dp"
             android:layout_height="20dp"
             android:background="@drawable/back_button"
-            android:onClick="goToStartUp"
-            android:padding="100dp" />
+            android:onClick="goBackToStartUp"
+            android:padding="500dp" />
 
         <TextView
             android:layout_width="wrap_content"

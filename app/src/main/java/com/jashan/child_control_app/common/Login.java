@@ -16,13 +16,13 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
     }
-    public void goToStartUp( View view){
-        ActivityTransition.goToActivity(this,StartUp.class);
+    public void goBackToStartUp(View view) {
+        ActivityTransition.goBack(this, StartUp.class);
     }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.transition.enter,R.transition.exit);
+        overridePendingTransition(R.transition.enter_back,R.transition.back);
     }
 
     public void goToRegister(View view) {
