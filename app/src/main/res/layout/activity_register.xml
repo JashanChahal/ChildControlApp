@@ -25,9 +25,8 @@
             android:layout_width="15dp"
             android:layout_height="20dp"
             android:background="@drawable/back_button"
-            android:padding="500dp"
             android:onClick="goBackToStartUp"
-            />
+            android:padding="500dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,28 +44,32 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <RadioGroup
+                android:id="@+id/radioparentchild"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/muli_light"
-                android:hint="@string/enter_fullname"
-                android:textColorHint="@color/black"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="2dp"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/black">
+                android:orientation="horizontal">
 
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
+                <RadioButton
+                    android:id="@+id/radioparent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:inputType="text" />
+                    android:layout_weight="1"
+                    android:onClick="renderForm"
+                    android:text="@string/parent"></RadioButton>
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <RadioButton
+                    android:id="@+id/radiochild"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="renderForm"
+                    android:text="@string/child"></RadioButton>
+            </RadioGroup>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
@@ -87,39 +90,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <RadioGroup
-                android:id="@+id/radioparentchild"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-
-                <RadioButton
-                    android:id="@+id/radioparent"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                     android:onClick="renderForm"
-                    android:text="@string/parent"></RadioButton>
-
-                <RadioButton
-                    android:id="@+id/radiochild"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                 android:text="@string/child"
-                    android:onClick="renderForm"
-                    ></RadioButton>
-            </RadioGroup>
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/parent_username"
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/muli_light"
-                android:hint="@string/parent_username"
+                android:hint="@string/enter_email"
                 android:textColorHint="@color/black"
                 android:visibility="gone"
                 app:boxStrokeColor="@color/black"
@@ -132,7 +109,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/parent_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/muli_light"
+                android:hint="@string/parent_email"
+                android:textColorHint="@color/black"
+                android:visibility="gone"
+                app:boxStrokeColor="@color/black"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/black">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:inputType="textEmailAddress"
 
                     />
 
@@ -184,11 +185,34 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/child_register_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/muli_light"
+                android:hint="@string/parent_password"
+                android:textColorHint="@color/black"
+                android:visibility="gone"
+                app:boxStrokeColor="@color/black"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/black">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/rounded_button"
+                android:onClick="registerUser"
                 android:text="@string/register"
                 android:textColor="@color/black"></Button>
 
@@ -200,10 +224,17 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="#00000000"
-                android:text="@string/login"
-                android:textColor="@color/black"
                 android:onClick="goToLogin"
-                ></Button>
+                android:text="@string/login"
+                android:textColor="@color/black"></Button>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone" />
 
 
         </LinearLayout>

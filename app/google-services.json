@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "522486921739",
+    "project_id": "child-control-app",
+    "storage_bucket": "child-control-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522486921739:android:f50da2df37cb2595ef250e",
+        "android_client_info": {
+          "package_name": "com.jashan.child_control_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522486921739-911k6mijjgk3jnvan9icalf3poch9v2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkLgMkNDpnNDHwGc0dJsbvqCqbNJ7mruw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522486921739-911k6mijjgk3jnvan9icalf3poch9v2j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

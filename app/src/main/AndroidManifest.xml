@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChildControlApp">
-        <activity android:name=".common.Register"></activity>
+        <activity android:name=".parent.ParentHomepage"></activity>
+        <activity android:name=".common.Register" />
         <activity android:name=".common.Login" />
         <activity android:name=".StartUp">
             <intent-filter>
