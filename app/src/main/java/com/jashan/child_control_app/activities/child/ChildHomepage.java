@@ -1,4 +1,4 @@
-package com.jashan.child_control_app.child;
+package com.jashan.child_control_app.activities.child;
 
 import androidx.appcompat.app.AppCompatActivity;
 

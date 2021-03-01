@@ -1,4 +1,4 @@
-package com.jashan.child_control_app.common;
+package com.jashan.child_control_app.activities.authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +16,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jashan.child_control_app.R;
-import com.jashan.child_control_app.StartUp;
-import com.jashan.child_control_app.parent.ParentHomepage;
+import com.jashan.child_control_app.activities.StartUp;
+import com.jashan.child_control_app.activities.parent.ParentHomepage;
+import com.jashan.child_control_app.activities.parent.ParentProfile;
 import com.jashan.child_control_app.utils.ActivityTransition;
 
 public class Login extends AppCompatActivity {
@@ -34,6 +35,10 @@ public class Login extends AppCompatActivity {
         passwordTextInputLayout = findViewById(R.id.login_password);
 
         mAuth = FirebaseAuth.getInstance();
+
+        if (mAuth != null) {
+
+        }
     }
     public void goBackToStartUp(View view) {
         ActivityTransition.goBack(this, StartUp.class);

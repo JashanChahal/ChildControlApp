@@ -8,7 +8,7 @@
     android:padding="30dp"
     android:scrollbars="none"
     android:transitionName="transition_login"
-    tools:context=".common.Login">
+    tools:context=".activities.authentication.Login">
 
     <LinearLayout
         android:layout_width="match_parent"

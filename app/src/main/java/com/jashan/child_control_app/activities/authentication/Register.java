@@ -1,23 +1,20 @@
-package com.jashan.child_control_app.common;
+package com.jashan.child_control_app.activities.authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,13 +24,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.ktx.Firebase;
 import com.jashan.child_control_app.R;
-import com.jashan.child_control_app.StartUp;
-import com.jashan.child_control_app.modal.Child;
-import com.jashan.child_control_app.modal.Parent;
-import com.jashan.child_control_app.modal.User;
-import com.jashan.child_control_app.parent.ParentHomepage;
+import com.jashan.child_control_app.activities.StartUp;
+import com.jashan.child_control_app.model.Child;
+import com.jashan.child_control_app.model.Parent;
+import com.jashan.child_control_app.model.User;
+import com.jashan.child_control_app.activities.parent.ParentProfile;
 import com.jashan.child_control_app.utils.ActivityTransition;
 import com.jashan.child_control_app.utils.TextValidator;
 
@@ -53,6 +49,7 @@ public class Register extends AppCompatActivity {
     private RadioGroup radioGroup;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +66,7 @@ public class Register extends AppCompatActivity {
         validateListeners();
 
         mAuth = FirebaseAuth.getInstance();
+        pref = getSharedPreferences("com.jashan.users",MODE_PRIVATE);
 
     }
 
@@ -144,12 +142,22 @@ public class Register extends AppCompatActivity {
             return;
         }
 
+
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString("userName",inputData.getUserName());
+        editor.putString("password",inputData.getPassword());
+        editor.putString("userEmail",inputData.getEmail());
+
         if (inputData.isParent()) {
             registerUserAndRedirect(inputData.getEmail(), inputData.getPassword(), inputData.getUserName());
+            editor.putString("type","parent");
         } else {
             registerChild(inputData.getEmail(), inputData.getPassword(), inputData.getUserName(), inputData.getParentEmail());
+            editor.putString("type","child");
         }
-
+        editor.putBoolean("loggedin",true);
+        editor.apply();
     }
 
     private void registerUserAndRedirect(String email, String password, String userName) {
@@ -163,7 +171,7 @@ public class Register extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             writeNewUser(user.getUid(), new Parent(userName, email, user.getUid()), "parent");
-                            Intent intent = new Intent(Register.this, ParentHomepage.class);
+                            Intent intent = new Intent(Register.this, ParentProfile.class);
                             intent.putExtra("UID", user.getUid());
                             startActivity(intent);
                         } else {

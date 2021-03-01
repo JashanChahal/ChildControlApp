@@ -1,4 +1,4 @@
-package com.jashan.child_control_app.modal;
+package com.jashan.child_control_app.model;
 
 
 public interface User  {

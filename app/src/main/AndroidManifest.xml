@@ -11,11 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChildControlApp">
-        <activity android:name=".child.ChildHomepage"></activity>
-        <activity android:name=".parent.ParentHomepage" />
-        <activity android:name=".common.Register" />
-        <activity android:name=".common.Login" />
-        <activity android:name=".StartUp">
+        <activity android:name=".activities.parent.ParentHomepage"></activity>
+        <activity android:name=".activities.child.ChildHomepage" />
+        <activity android:name=".activities.parent.ParentProfile" />
+        <activity android:name=".activities.authentication.Register" />
+        <activity android:name=".activities.authentication.Login" />
+        <activity android:name=".activities.StartUp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
