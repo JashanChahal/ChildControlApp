@@ -21,6 +21,7 @@
     <string name="enter_fullname">Full Name</string>
     <string name="username_title">UserName</string>
     <string name="children">Children</string>
+    <string name="logout">Log out</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

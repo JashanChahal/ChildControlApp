@@ -170,7 +170,7 @@ public class Register extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            writeNewUser(user.getUid(), new Parent(userName, email, user.getUid()), "parent");
+                            writeNewUser(user.getUid(), new Parent(userName, email, user.getUid()));
                             Intent intent = new Intent(Register.this, ParentProfile.class);
                             intent.putExtra("UID", user.getUid());
                             startActivity(intent);
@@ -183,9 +183,9 @@ public class Register extends AppCompatActivity {
 
     }
 
-    public void writeNewUser(String userId, User user, String type) {
+    public void writeNewUser(String userId, User user) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(type).child(userId).setValue(user);
+        mDatabase.child("users").child(userId).setValue(user);
     }
 
     private void registerChild(String childEmail, String childPassword, String childName, String parentEmail) {
@@ -199,7 +199,7 @@ public class Register extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             User child = new Child(childName, childEmail, parentEmail);
-                            writeNewUser(user.getUid(), child, "child");
+                            writeNewUser(user.getUid(), child);
                             addChildToParent((Child) child);
                         } else {
                             Toast.makeText(Register.this, "failed", Toast.LENGTH_LONG).show();
@@ -213,7 +213,7 @@ public class Register extends AppCompatActivity {
     private void addChildToParent(Child child) {
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
-        mDatabase.child("parent")
+        mDatabase
                 .orderByChild("userEmail")
                 .equalTo(child.getParentEmail().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -226,7 +226,7 @@ public class Register extends AppCompatActivity {
                     }
                     parent.getChildren().add(child);
                     Map<String, Object> update = new HashMap<>();
-                    update.put("/users/parent/" + parent.getUserId(), parent);
+                    update.put("/users/" + parent.getUserId(), parent);
                     FirebaseDatabase.getInstance().getReference().updateChildren(update);
                 }
             }

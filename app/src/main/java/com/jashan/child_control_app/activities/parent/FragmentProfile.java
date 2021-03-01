@@ -1,6 +1,6 @@
 package com.jashan.child_control_app.activities.parent;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,54 +11,79 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.jashan.child_control_app.R;
+import com.jashan.child_control_app.activities.StartUp;
 import com.jashan.child_control_app.model.Parent;
+import com.jashan.child_control_app.model.User;
+import com.jashan.child_control_app.repository.AfterSuccess;
+import com.jashan.child_control_app.repository.FirebaseWebService;
+import com.jashan.child_control_app.repository.WebService;
 
 public class FragmentProfile extends Fragment {
-    final private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    final private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private SharedPreferences pref;
+    WebService webService;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        setListenerOnLogoutButton(view);
 
-        return inflater.inflate(R.layout.fragment_profile,container,false);
+        return view;
+    }
+
+    private void setListenerOnLogoutButton(View view) {
+        AppCompatButton button = view.findViewById(R.id.logout_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), StartUp.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        String id = user.getUid();
 
+        webService = new FirebaseWebService();
+        setProfileOfUser(webService);
+    }
+
+    private void setProfileOfUser(WebService webService) {
         TextView userName = getView().findViewById(R.id.profile_username);
         TextView email = getView().findViewById(R.id.profile_email);
         TextView children = getView().findViewById(R.id.profile_children);
-        ProgressBar progressBar = getView().findViewById(R.id.progressBar3);
-        DatabaseReference query = database.getReference("users");
-        progressBar.setVisibility(View.VISIBLE);
-        query.child("parent/"+id).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-            @Override
-            public void onSuccess(DataSnapshot snapshot) {
-                progressBar.setVisibility(View.GONE);
-                Parent parent = snapshot.getValue(Parent.class);
 
-                if (parent != null) {
-                    userName.setText(parent.getUserName());
-                    email.setText(parent.getUserEmail());
-                    children.setText(parent.getChildren().toString());
+        ProgressBar progressBar = getView().findViewById(R.id.progressBar3);
+        progressBar.setVisibility(View.VISIBLE);
+
+        webService.getCurrentUserAndDo(new AfterSuccess<User>() {
+            @Override
+            public void doThis(User user) {
+                progressBar.setVisibility(View.GONE);
+
+                if (user != null) {
+                    userName.setText(user.getUserName());
+                    email.setText(user.getUserEmail());
+                    if (user.getType().equals("Parent"))
+                        children.setText(((Parent) user).getChildren().toString());
+                    else {
+                        children.setText("No");
+                    }
                 } else {
-                    Log.v("sf", "null");
+                    Log.e("FragmentProfile", "User is null");
                 }
             }
         });
     }
+
+
 }

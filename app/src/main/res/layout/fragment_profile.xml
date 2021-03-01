@@ -117,7 +117,15 @@
                     android:src="@drawable/user_profile"></ImageView>
 
             </RelativeLayout>
-
+  <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/logout_btn"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/red"
+      android:text="@string/logout"
+      android:layout_marginTop="40dp"
+      android:backgroundTint="@color/red"
+      />
         </LinearLayout>
 
     </ScrollView>
