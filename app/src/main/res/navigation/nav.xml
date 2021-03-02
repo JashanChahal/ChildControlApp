@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_dashboard"
-        android:name="com.jashan.child_control_app.Dashboard"
+        android:name="com.jashan.child_control_app.activities.parent.FragmentDashboard"
         android:label="Dashboard"
         tools:layout="@layout/fragment_dashboard" >
         <action
@@ -19,12 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.jashan.child_control_app.Details"
+        android:name="com.jashan.child_control_app.activities.parent.FragmentProfile"
         android:label="Profile"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.jashan.child_control_app.Profile"
+        android:name="com.jashan.child_control_app.activities.parent.FragmentSettings"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>
