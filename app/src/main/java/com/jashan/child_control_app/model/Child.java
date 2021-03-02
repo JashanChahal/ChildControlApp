@@ -7,14 +7,33 @@ public class Child implements User {
     private String userEmail;
     private String parentEmail;
     private String type;
+    private String userId;
 
-    public Child(String name, String email, String parentEmail) {
+    public Child(String name, String email, String parentEmail, String userId) {
         this.userName = name;
         this.userEmail = email;
         this.parentEmail = parentEmail;
+        this.userId = userId;
         this.type = "Child";
     }
-    public Child(){}
+
+    public Child(String name, String email, String parentEmail) {
+        this(name, email, parentEmail, null);
+    }
+
+    public Child() {
+    }
+
+    @Override
+    public String getUserId() {
+        return this.userId;
+    }
+
+    @Override
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String getUserName() {
         return this.userName;
@@ -26,8 +45,8 @@ public class Child implements User {
     }
 
     @Override
-    public String setUserName(String userName) {
-        return null;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getType() {
@@ -35,8 +54,8 @@ public class Child implements User {
     }
 
     @Override
-    public String setUserEmail(String userEmail) {
-        return null;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getParentEmail() {

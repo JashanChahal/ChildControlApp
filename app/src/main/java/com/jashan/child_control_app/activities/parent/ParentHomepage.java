@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
 
+import com.jashan.child_control_app.repository.FirebaseWebService;
 import com.jashan.child_control_app.repository.WebService;
 
 public class ParentHomepage extends AppCompatActivity {
@@ -37,7 +38,7 @@ public class ParentHomepage extends AppCompatActivity {
 
 
         pref = getSharedPreferences("com.jashan.users", MODE_PRIVATE);
-
+        webService = new FirebaseWebService();
         setListenerOnLogoutButton();
     }
 
@@ -48,7 +49,7 @@ public class ParentHomepage extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
+                webService.signOut();
                 Intent intent = new Intent(ParentHomepage.this, StartUp.class);
                 startActivity(intent);
                 finish();

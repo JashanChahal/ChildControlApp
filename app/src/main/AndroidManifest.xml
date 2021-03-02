@@ -20,7 +20,6 @@
         </activity>
         <activity android:name=".activities.parent.ParentHomepage" />
         <activity android:name=".activities.child.ChildHomepage" />
-        <activity android:name=".activities.parent.ParentProfile" />
         <activity android:name=".activities.authentication.Register" />
         <activity android:name=".activities.authentication.Login" />
         <activity android:name=".activities.StartUp">

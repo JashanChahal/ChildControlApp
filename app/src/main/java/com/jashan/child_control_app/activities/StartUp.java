@@ -11,7 +11,6 @@ import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.authentication.Login;
 import com.jashan.child_control_app.activities.authentication.Register;
 import com.jashan.child_control_app.activities.parent.ParentHomepage;
-import com.jashan.child_control_app.activities.parent.ParentProfile;
 import com.jashan.child_control_app.utils.ActivityTransition;
 
 public class StartUp extends AppCompatActivity {

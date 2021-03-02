@@ -21,7 +21,7 @@ import com.jashan.child_control_app.activities.StartUp;
 import com.jashan.child_control_app.activities.parent.ParentHomepage;
 
 import com.jashan.child_control_app.model.User;
-import com.jashan.child_control_app.repository.AfterSuccess;
+import com.jashan.child_control_app.repository.AfterCompletion;
 import com.jashan.child_control_app.repository.FirebaseWebService;
 import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.ActivityTransition;
@@ -97,9 +97,9 @@ public class Login extends AppCompatActivity {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        webService.getCurrentUserAndDo(new AfterSuccess<User>() {
+        webService.getCurrentUserAndDo(new AfterCompletion<User>() {
             @Override
-            public void doThis(User user) {
+            public void onSuccess(User user) {
                 progressBar.setVisibility(View.GONE);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("userName", user.getUserName());
@@ -107,6 +107,11 @@ public class Login extends AppCompatActivity {
                 editor.putString("type", user.getType());
                 editor.apply();
 
+            }
+
+            @Override
+            public void onFailure(Exception e){
+                Toast.makeText(Login.this,"No User found!",Toast.LENGTH_LONG);
             }
         });
 

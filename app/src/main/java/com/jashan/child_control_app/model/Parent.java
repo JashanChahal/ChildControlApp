@@ -19,13 +19,18 @@ public class Parent implements User {
         this.children = new ArrayList<>();
         this.type = "Parent";
     }
+    public Parent(String name, String email) {
+        this(name,email,null);
+    }
+
+    public Parent(){}
 
     @Override
     public String getType() {
         return type;
     }
 
-    public Parent(){}
+
     @Override
     public String getUserName() {
         return this.userName;
@@ -37,13 +42,13 @@ public class Parent implements User {
     }
 
     @Override
-    public String setUserName(String userName) {
-        return this.userName = userName;
+    public void setUserName(String userName) {
+         this.userName = userName;
     }
 
     @Override
-    public String setUserEmail( String email) {
-        return this.userName = email;
+    public void setUserEmail( String email) {
+         this.userName = email;
     }
 
     public void addChildren(Child child) {
@@ -56,13 +61,16 @@ public class Parent implements User {
     public List<Child> getChildren(){
         return this.children;
     }
-
+    @Override
     public void setUserId(String uid) {
         this.userId = uid;
     }
+
+    @Override
     public String getUserId() {
         return this.userId;
     }
+
     @NonNull
     @Override
     public String toString() {

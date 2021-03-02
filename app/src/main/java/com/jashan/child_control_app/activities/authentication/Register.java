@@ -30,7 +30,9 @@ import com.jashan.child_control_app.activities.parent.ParentHomepage;
 import com.jashan.child_control_app.model.Child;
 import com.jashan.child_control_app.model.Parent;
 import com.jashan.child_control_app.model.User;
-import com.jashan.child_control_app.activities.parent.ParentProfile;
+import com.jashan.child_control_app.repository.AfterCompletion;
+import com.jashan.child_control_app.repository.FirebaseWebService;
+import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.ActivityTransition;
 import com.jashan.child_control_app.utils.TextValidator;
 
@@ -51,6 +53,7 @@ public class Register extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private SharedPreferences pref;
+    private WebService webService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +70,8 @@ public class Register extends AppCompatActivity {
         validateListeners();
 
         mAuth = FirebaseAuth.getInstance();
-        pref = getSharedPreferences("com.jashan.users",MODE_PRIVATE);
-
+        pref = getSharedPreferences("com.jashan.users", MODE_PRIVATE);
+        webService = new FirebaseWebService();
     }
 
     private void validateListeners() {
@@ -146,66 +149,59 @@ public class Register extends AppCompatActivity {
 
         SharedPreferences.Editor editor = pref.edit();
 
-        editor.putString("userName",inputData.getUserName());
-        editor.putString("password",inputData.getPassword());
-        editor.putString("userEmail",inputData.getEmail());
+        editor.putString("userName", inputData.getUserName());
+        editor.putString("password", inputData.getPassword());
+        editor.putString("userEmail", inputData.getEmail());
 
         if (inputData.isParent()) {
             registerUserAndRedirect(inputData.getEmail(), inputData.getPassword(), inputData.getUserName());
-            editor.putString("type","parent");
+            editor.putString("type", "parent");
         } else {
             registerChild(inputData.getEmail(), inputData.getPassword(), inputData.getUserName(), inputData.getParentEmail());
-            editor.putString("type","child");
+            editor.putString("type", "child");
         }
-        editor.putBoolean("loggedin",true);
+        editor.putBoolean("loggedin", true);
         editor.apply();
     }
 
     private void registerUserAndRedirect(String email, String password, String userName) {
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        webService.createUser(new Parent(userName, email), password)
+                .addAfterCompletion(new AfterCompletion<User>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onSuccess(User user) {
                         progressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            writeNewUser(user.getUid(), new Parent(userName, email, user.getUid()));
-                            Intent intent = new Intent(Register.this, ParentHomepage.class);
-                            intent.putExtra("UID", user.getUid());
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(Register.this, "failed", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(Register.this, ParentHomepage.class);
+                        startActivity(intent);
+                    }
 
-                        }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.e("Exception", e.toString());
+                        Toast.makeText(Register.this, "Unable to register user", Toast.LENGTH_LONG).show();
                     }
                 });
 
+
     }
 
-    public void writeNewUser(String userId, User user) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(userId).setValue(user);
-    }
 
     private void registerChild(String childEmail, String childPassword, String childName, String parentEmail) {
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(childEmail, childPassword)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        webService.createUser(new Child(childName,childEmail,parentEmail), childPassword)
+                .addAfterCompletion(new AfterCompletion<User>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onSuccess(User user) {
                         progressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            User child = new Child(childName, childEmail, parentEmail);
-                            writeNewUser(user.getUid(), child);
-                            addChildToParent((Child) child);
-                        } else {
-                            Toast.makeText(Register.this, "failed", Toast.LENGTH_LONG).show();
+                        addChildToParent((Child) user);
+                    }
 
-                        }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.v("Exception",e.toString());
+                        Toast.makeText(Register.this,"User is not registered",Toast.LENGTH_LONG).show();
                     }
                 });
 
