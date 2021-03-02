@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
+import com.jashan.child_control_app.activities.parent.ParentHomepage;
 import com.jashan.child_control_app.model.Child;
 import com.jashan.child_control_app.model.Parent;
 import com.jashan.child_control_app.model.User;
@@ -171,7 +172,7 @@ public class Register extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             writeNewUser(user.getUid(), new Parent(userName, email, user.getUid()));
-                            Intent intent = new Intent(Register.this, ParentProfile.class);
+                            Intent intent = new Intent(Register.this, ParentHomepage.class);
                             intent.putExtra("UID", user.getUid());
                             startActivity(intent);
                         } else {

@@ -1,31 +1,23 @@
 package com.jashan.child_control_app.activities.parent;
 
-import android.content.Intent;
-import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.jashan.child_control_app.R;
-import com.jashan.child_control_app.activities.StartUp;
-import com.jashan.child_control_app.model.Parent;
-import com.jashan.child_control_app.model.User;
-import com.jashan.child_control_app.repository.AfterSuccess;
-import com.jashan.child_control_app.repository.FirebaseWebService;
-import com.jashan.child_control_app.repository.WebService;
+
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentProfile extends Fragment {
-    WebService webService;
+    private SharedPreferences pref;
 
     @Nullable
     @Override
@@ -39,38 +31,25 @@ public class FragmentProfile extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        webService = new FirebaseWebService();
-        setProfileOfUser(webService);
+        pref = getActivity().getSharedPreferences("com.jashan.users",MODE_PRIVATE);
+        setProfileOfUser();
     }
 
-    private void setProfileOfUser(WebService webService) {
+    private void setProfileOfUser() {
         TextView userNameTitle = getView().findViewById(R.id.username_title);
         TextView userName = getView().findViewById(R.id.profile_username);
         TextView email = getView().findViewById(R.id.profile_email);
-//        TextView children = getView().findViewById(R.id.profile_children);
 
-        ProgressBar progressBar = getView().findViewById(R.id.progressBar3);
-        progressBar.setVisibility(View.VISIBLE);
+        userNameTitle.setText(pref.getString("userName","userName"));
 
-        webService.getCurrentUserAndDo(new AfterSuccess<User>() {
-            @Override
-            public void doThis(User user) {
-                progressBar.setVisibility(View.GONE);
+        userName.setText(pref.getString("userName","userName"));
+        // Change Color
+        userName.setTextColor(getActivity().getResources().getColor(R.color.black,getActivity().getTheme()));
 
-                if (user != null) {
-                    userName.setText(user.getUserName());
-                    userName.setTextColor(getView().getResources().getColor(R.color.black,getActivity().getTheme()));
-                    userNameTitle.setText(user.getUserName());
-                    email.setText(user.getUserEmail());
-                    email.setTextColor(getView().getResources().getColor(R.color.black,getActivity().getTheme()));
+        email.setText(pref.getString("userEmail","userName"));
+        // Change Color
+        email.setTextColor(getActivity().getResources().getColor(R.color.black,getActivity().getTheme()));;
 
-
-                } else {
-                    Log.e("FragmentProfile", "User is null");
-                }
-            }
-        });
     }
 
 

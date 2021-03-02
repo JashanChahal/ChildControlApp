@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -16,7 +18,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
 
+import com.jashan.child_control_app.repository.WebService;
+
 public class ParentHomepage extends AppCompatActivity {
+    private SharedPreferences pref;
+    private WebService webService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +35,13 @@ public class ParentHomepage extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentDashboard()).commit();
 
+
+        pref = getSharedPreferences("com.jashan.users", MODE_PRIVATE);
+
         setListenerOnLogoutButton();
     }
+
+
 
     private void setListenerOnLogoutButton() {
         TextView logout = findViewById(R.id.logout);
