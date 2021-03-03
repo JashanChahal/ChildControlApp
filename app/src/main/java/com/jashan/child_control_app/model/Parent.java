@@ -25,50 +25,52 @@ public class Parent implements User {
 
     public Parent(){}
 
-    @Override
-    public String getType() {
-        return type;
-    }
-
 
     @Override
     public String getUserName() {
-        return this.userName;
-    }
-
-    @Override
-    public String getUserEmail() {
-        return this.userEmail;
+        return userName;
     }
 
     @Override
     public void setUserName(String userName) {
-         this.userName = userName;
+        this.userName = userName;
     }
 
     @Override
-    public void setUserEmail( String email) {
-         this.userName = email;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void addChildren(Child child) {
-        this.children.add(child);
+    @Override
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    @Override
+    public String getUserId() {
+        return userId;
+    }
+
+    @Override
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public List<Child> getChildren() {
+        return children;
     }
 
     public void setChildren(List<Child> children) {
         this.children = children;
     }
-    public List<Child> getChildren(){
-        return this.children;
-    }
-    @Override
-    public void setUserId(String uid) {
-        this.userId = uid;
-    }
 
     @Override
-    public String getUserId() {
-        return this.userId;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @NonNull

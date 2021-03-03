@@ -178,6 +178,7 @@ public class Register extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Exception e) {
+                        progressBar.setVisibility(View.GONE);
                         Log.e("Exception", e.toString());
                         Toast.makeText(Register.this, "Unable to register user", Toast.LENGTH_LONG).show();
                     }
@@ -194,12 +195,14 @@ public class Register extends AppCompatActivity {
                 .addAfterCompletion(new AfterCompletion<User>() {
                     @Override
                     public void onSuccess(User user) {
-                        progressBar.setVisibility(View.GONE);
                         addChildToParent((Child) user);
+                        String parentEmail = ((Child) user).getParentEmail();
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onFailure(Exception e) {
+                        progressBar.setVisibility(View.GONE);
                         Log.v("Exception",e.toString());
                         Toast.makeText(Register.this,"User is not registered",Toast.LENGTH_LONG).show();
                     }
@@ -215,6 +218,7 @@ public class Register extends AppCompatActivity {
                 .equalTo(child.getParentEmail().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.v("obj",snapshot.getChildren().iterator().next().toString());
 
                 Parent parent = snapshot.getChildren().iterator().next().getValue(Parent.class);
                 if (parent != null) {

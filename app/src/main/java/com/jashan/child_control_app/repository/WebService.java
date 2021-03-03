@@ -9,4 +9,5 @@ public interface WebService {
     public void signOut();
     public WebService createUser(User user, String password);
     public void addAfterCompletion(AfterCompletion<User> afterCompletion);
+    public WebService getUserEquals(String key,String value);
 }

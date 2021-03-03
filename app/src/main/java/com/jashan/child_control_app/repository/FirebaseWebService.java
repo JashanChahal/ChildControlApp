@@ -41,6 +41,12 @@ public class FirebaseWebService implements WebService {
     }
 
     @Override
+    public WebService getUserEquals(String key, String value) {
+        return this;
+    }
+
+
+    @Override
     public WebService createUser(User user, String password) {
         authenticationDetails = new AuthenticationDetails(user, password);
         return this;
