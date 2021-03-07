@@ -126,5 +126,46 @@
 
             ></View>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="50dp"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Children Registered :"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/registered_children"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None"
+            android:maxLines="1"
+            android:layout_marginLeft="15dp"
+            android:textSize="15dp"
+            android:textColor="@android:color/darker_gray"
+            android:ellipsize="end"
+            ></TextView>
+    </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="10dp"
+
+            ></View>
+
     </LinearLayout>
 </FrameLayout>

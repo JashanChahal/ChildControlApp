@@ -3,6 +3,7 @@ package com.jashan.child_control_app.activities.authentication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
+import com.jashan.child_control_app.activities.child.ChildHomepage;
 import com.jashan.child_control_app.activities.parent.ParentHomepage;
 
 import com.jashan.child_control_app.model.User;
@@ -31,6 +33,8 @@ public class Login extends AppCompatActivity {
     TextInputLayout passwordTextInputLayout;
     private FirebaseAuth mAuth;
     WebService webService;
+    ProgressBar progressBar;
+
     private SharedPreferences pref;
 
     @Override
@@ -42,11 +46,15 @@ public class Login extends AppCompatActivity {
         passwordTextInputLayout = findViewById(R.id.login_password);
 
         mAuth = FirebaseAuth.getInstance();
+        progressBar = findViewById(R.id.progressBar2);
 
-        if (mAuth != null) {
-
-        }
         pref = getSharedPreferences("com.jashan.users", MODE_PRIVATE);
+
+        if (mAuth.getCurrentUser() != null) {
+            ActivityTransition.fetchUserDetailsAndGoToHomePage(this,progressBar,pref);
+        }
+
+
         webService = new FirebaseWebService();
     }
 
@@ -68,21 +76,14 @@ public class Login extends AppCompatActivity {
         String email = emailTextInputLayout.getEditText().getText().toString();
         String password = passwordTextInputLayout.getEditText().getText().toString();
 
-        ProgressBar progressBar = findViewById(R.id.progressBar2);
         progressBar.setVisibility(View.VISIBLE);
-
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
-
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            getCurrentUserAndSetPreferences(progressBar);
-                            Intent intent = new Intent(Login.this, ParentHomepage.class);
-                            intent.putExtra("UID", user.getUid());
-                            startActivity(intent);
+                            ActivityTransition.fetchUserDetailsAndGoToHomePage(Login.this,progressBar,pref);
                         } else {
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(Login.this, "Email or Password is wrong", Toast.LENGTH_LONG).show();
@@ -91,30 +92,5 @@ public class Login extends AppCompatActivity {
                 });
     }
 
-
-    private void getCurrentUserAndSetPreferences(ProgressBar progressBar) {
-        webService = new FirebaseWebService();
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        webService.getCurrentUserAndDo(new AfterCompletion<User>() {
-            @Override
-            public void onSuccess(User user) {
-                progressBar.setVisibility(View.GONE);
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putString("userName", user.getUserName());
-                editor.putString("userEmail", user.getUserEmail());
-                editor.putString("type", user.getType());
-                editor.apply();
-
-            }
-
-            @Override
-            public void onFailure(Exception e){
-                Toast.makeText(Login.this,"No User found!",Toast.LENGTH_LONG);
-            }
-        });
-
-
-    }
 }
+

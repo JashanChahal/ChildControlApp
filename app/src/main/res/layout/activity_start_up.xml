@@ -88,6 +88,7 @@
             android:background="#00000000"
             android:text="@string/about"
             android:textColor="@color/black" />
+
     </LinearLayout>
 
 </ScrollView>

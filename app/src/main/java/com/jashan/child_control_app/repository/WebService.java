@@ -10,4 +10,6 @@ public interface WebService {
     public WebService createUser(User user, String password);
     public void addAfterCompletion(AfterCompletion<User> afterCompletion);
     public WebService getUserEquals(String key,String value);
+    public WebService queryByKeyValue(String key, String value) ;
+
 }

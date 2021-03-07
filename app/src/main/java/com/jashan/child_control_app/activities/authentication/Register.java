@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
+import com.jashan.child_control_app.activities.child.ChildHomepage;
 import com.jashan.child_control_app.activities.parent.ParentHomepage;
 import com.jashan.child_control_app.model.Child;
 import com.jashan.child_control_app.model.Parent;
@@ -154,20 +155,20 @@ public class Register extends AppCompatActivity {
         editor.putString("userEmail", inputData.getEmail());
 
         if (inputData.isParent()) {
-            registerUserAndRedirect(inputData.getEmail(), inputData.getPassword(), inputData.getUserName());
+            registerParentAndRedirect(new Parent(inputData.getUserName(), inputData.getEmail()), inputData.getPassword());
             editor.putString("type", "parent");
         } else {
-            registerChild(inputData.getEmail(), inputData.getPassword(), inputData.getUserName(), inputData.getParentEmail());
+            registerChildAndRedirect(new Child(inputData.getUserName(),inputData.getEmail(),inputData.getParentEmail()), inputData.getPassword());
             editor.putString("type", "child");
         }
-        editor.putBoolean("loggedin", true);
+
         editor.apply();
     }
 
-    private void registerUserAndRedirect(String email, String password, String userName) {
+    private void registerParentAndRedirect(Parent parent, String password) {
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        webService.createUser(new Parent(userName, email), password)
+        webService.createUser(parent, password)
                 .addAfterCompletion(new AfterCompletion<User>() {
                     @Override
                     public void onSuccess(User user) {
@@ -188,15 +189,14 @@ public class Register extends AppCompatActivity {
     }
 
 
-    private void registerChild(String childEmail, String childPassword, String childName, String parentEmail) {
+    private void registerChildAndRedirect(Child child, String childPassword) {
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        webService.createUser(new Child(childName,childEmail,parentEmail), childPassword)
+        webService.createUser(child, childPassword)
                 .addAfterCompletion(new AfterCompletion<User>() {
                     @Override
                     public void onSuccess(User user) {
                         addChildToParent((Child) user);
-                        String parentEmail = ((Child) user).getParentEmail();
                         progressBar.setVisibility(View.GONE);
                     }
 
@@ -211,6 +211,9 @@ public class Register extends AppCompatActivity {
     }
 
     private void addChildToParent(Child child) {
+
+        webService.queryByKeyValue("userEmail",child.getParentEmail()) ;
+
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
         mDatabase
@@ -229,6 +232,9 @@ public class Register extends AppCompatActivity {
                     Map<String, Object> update = new HashMap<>();
                     update.put("/users/" + parent.getUserId(), parent);
                     FirebaseDatabase.getInstance().getReference().updateChildren(update);
+
+                    Intent intent = new Intent(Register.this, ChildHomepage.class);
+                    startActivity(intent);
                 }
             }
 

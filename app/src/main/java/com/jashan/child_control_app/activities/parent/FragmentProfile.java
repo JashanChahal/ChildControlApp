@@ -39,6 +39,7 @@ public class FragmentProfile extends Fragment {
         TextView userNameTitle = getView().findViewById(R.id.username_title);
         TextView userName = getView().findViewById(R.id.profile_username);
         TextView email = getView().findViewById(R.id.profile_email);
+        TextView children = getView().findViewById(R.id.registered_children);
 
         userNameTitle.setText(pref.getString("userName","userName"));
 
@@ -49,6 +50,10 @@ public class FragmentProfile extends Fragment {
         email.setText(pref.getString("userEmail","userName"));
         // Change Color
         email.setTextColor(getActivity().getResources().getColor(R.color.black,getActivity().getTheme()));;
+
+        children.setText(pref.getString("children","None"));
+        // Change Color
+        children.setTextColor(getActivity().getResources().getColor(R.color.black,getActivity().getTheme()));;
 
     }
 
