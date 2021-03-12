@@ -85,8 +85,8 @@ public class Register extends AppCompatActivity {
             return;
         }
 
-        InputData inputData = isSelected(radioParent) ? new InputData(true)
-                                                      : new InputData(false);
+        inputData.setParent(isSelected(radioParent));
+
         if (!inputData.verifyInputData()) {
             Log.v("VERIFIED", "Data not verified");
             return;
