@@ -8,14 +8,19 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.ProgressBar;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.jashan.child_control_app.R;
+import com.jashan.child_control_app.model.User;
+import com.jashan.child_control_app.repository.AfterCompletion;
+import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.ActivityTransition;
+import com.jashan.child_control_app.utils.Configuration;
+
+/*
+* Activity visible to user at the start of the Application
+*/
 
 public class SplashScreen extends AppCompatActivity {
-    private static int SPLASH_SCREEN = 2000;
-    private FirebaseAuth auth;
+    private WebService webService;
     private SharedPreferences pref;
     private ProgressBar progressBar;
 
@@ -23,23 +28,35 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        auth = FirebaseAuth.getInstance();
-        pref = getSharedPreferences("com.jashan.users", MODE_PRIVATE);
+
+        webService = Configuration.getWebservice();
+        pref = getSharedPreferences(Configuration.getSharedPreferenceFileLocation(), MODE_PRIVATE);
         progressBar = findViewById(R.id.progressBar3);
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FirebaseUser currentUser = auth.getCurrentUser();
-                if (currentUser != null) {
-                    ActivityTransition.fetchUserDetailsAndGoToHomePage(SplashScreen.this,progressBar,pref);
-                } else {
-                    ActivityTransition.goToActivity(SplashScreen.this,StartUp.class);
-                }
+        transitionToMainAppPageAfter(Configuration.getSplashScreenTime());
 
-            }
-        }, SPLASH_SCREEN);
     }
 
+    private void transitionToMainAppPageAfter(int time) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> goToMainAppActivity(), time);
+    }
+
+    private void goToMainAppActivity() {
+        webService.getCurrentUserAndDo(new AfterCompletion<User>() {
+            @Override
+            public void onSuccess(User user) {
+                // User exist. Go to Homepage
+                ActivityTransition.fetchUserDetailsAndGoToHomePage(SplashScreen.this, progressBar, pref);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // User does not exist. Go To startup screen for authentication
+                ActivityTransition.goToActivity(SplashScreen.this, StartUp.class);
+            }
+        });
+    }
 
 }
+
+
