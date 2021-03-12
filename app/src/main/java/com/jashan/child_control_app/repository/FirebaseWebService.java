@@ -38,11 +38,11 @@ public class FirebaseWebService implements WebService {
 
     @Override
     public void getCurrentUserAndDo(AfterCompletion<User> afterCompletion) {
-        String uid = currentUser.getUid();
         if (currentUser == null) {
             afterCompletion.onFailure(new UserNotFoundException("User does not exists"));
             return;
         }
+        String uid = currentUser.getUid();
         DatabaseReference ref = database.getReference("users");
         // Get users/uid from firebase database
         ref.child(uid).get()

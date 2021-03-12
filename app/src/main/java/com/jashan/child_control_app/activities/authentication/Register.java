@@ -28,28 +28,26 @@ import com.jashan.child_control_app.model.Child;
 import com.jashan.child_control_app.model.Parent;
 import com.jashan.child_control_app.model.User;
 import com.jashan.child_control_app.repository.AfterCompletion;
-import com.jashan.child_control_app.repository.FirebaseWebService;
 import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.ActivityTransition;
 import com.jashan.child_control_app.utils.Configuration;
-import com.jashan.child_control_app.utils.TextValidator;
 import com.jashan.child_control_app.utils.ValidateInput;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Objects;
+
 
 public class Register extends AppCompatActivity {
     private List<TextInputLayout> parentFormElements;
     private List<TextInputLayout> childFormElements;
-    private Map<String, TextInputLayout> formElements;
+    private InputData inputData;
     private RadioButton radioParent;
     private RadioButton radiochild;
     private RadioGroup radioGroup;
-    private DatabaseReference mDatabase;
+    public DatabaseReference mDatabase;
     private SharedPreferences pref;
     private WebService webService;
 
@@ -72,10 +70,11 @@ public class Register extends AppCompatActivity {
     }
 
     private void validateListeners() {
-        ValidateInput.addEmailListener(formElements.get("EMAIL"));
-        ValidateInput.addEmailListener(formElements.get("PARENT_EMAIL"));
-        ValidateInput.addValidateListener(formElements.get("PASSWORD"), 5, "Password");
-        ValidateInput.addMatchPasswordListener(formElements.get("CONFIRM_PASSWORD"), formElements.get("PASSWORD"));
+        ValidateInput.addEmailListener(inputData.getEmailTextLayout());
+        ValidateInput.addEmailListener(inputData.getParentEmailTextLayout());
+        ValidateInput.addValidateListener(inputData.getUserNameTextLayout(),3,"Username");
+        ValidateInput.addValidateListener(inputData.getPasswordTextLayout(), 5, "Password");
+        ValidateInput.addMatchPasswordListener(inputData.getConfirmPasswordTextLayout(), inputData.getPasswordTextLayout());
     }
 
 
@@ -95,7 +94,6 @@ public class Register extends AppCompatActivity {
 
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
-        editor.commit();
 
         editor.putString("userName", inputData.getUserName());
         editor.putString("password", inputData.getPassword());
@@ -193,18 +191,7 @@ public class Register extends AppCompatActivity {
     }
 
     private void setFormElements() {
-        formElements = new HashMap<>();
-        TextInputLayout emailTextLayout = (TextInputLayout) findViewById(R.id.email);
-        TextInputLayout passwordTextLayout = (TextInputLayout) findViewById(R.id.parent_register_password);
-        TextInputLayout confirmPasswordTextLayout = (TextInputLayout) findViewById(R.id.parent_register_confirmpassword);
-        TextInputLayout userNameTextLayout = (TextInputLayout) findViewById(R.id.username);
-        TextInputLayout parentEmail = findViewById(R.id.parent_email);
-
-        formElements.put("EMAIL", emailTextLayout);
-        formElements.put("PASSWORD", passwordTextLayout);
-        formElements.put("CONFIRM_PASSWORD", confirmPasswordTextLayout);
-        formElements.put("USER_NAME", userNameTextLayout);
-        formElements.put("PARENT_EMAIL", parentEmail);
+        inputData = new InputData();
     }
 
     // Form elements that will appear when a parent fills the form
@@ -264,21 +251,48 @@ public class Register extends AppCompatActivity {
     }
 
     private class InputData {
-        private boolean isParent;
-        private TextInputLayout emailTextLayout;
-        private TextInputLayout passwordTextLayout;
-        private TextInputLayout confirmPasswordTextLayout;
-        private TextInputLayout userNameTextLayout;
-        private TextInputLayout parentEmailTextLayout;
+        private Boolean isParent;
+        private final TextInputLayout emailTextLayout;
+        private final TextInputLayout passwordTextLayout;
+        private final  TextInputLayout confirmPasswordTextLayout;
+        private final TextInputLayout userNameTextLayout;
+        private final TextInputLayout parentEmailTextLayout;
 
-        public InputData(boolean isParent) {
+        public InputData(Boolean isParent) {
             this.isParent = isParent;
-            this.emailTextLayout = (TextInputLayout) findViewById(R.id.email);
-            this.passwordTextLayout = (TextInputLayout) findViewById(R.id.parent_register_password);
-            this.confirmPasswordTextLayout = (TextInputLayout) findViewById(R.id.parent_register_confirmpassword);
-            this.userNameTextLayout = (TextInputLayout) findViewById(R.id.username);
-            this.parentEmailTextLayout = (TextInputLayout) findViewById(R.id.parent_email);
+            this.emailTextLayout = findViewById(R.id.email);
+            this.passwordTextLayout = findViewById(R.id.parent_register_password);
+            this.confirmPasswordTextLayout = findViewById(R.id.parent_register_confirmpassword);
+            this.userNameTextLayout =  findViewById(R.id.username);
+            this.parentEmailTextLayout = findViewById(R.id.parent_email);
 
+        }
+        public InputData() {
+            this(null);
+        }
+
+        public TextInputLayout getEmailTextLayout() {
+            return emailTextLayout;
+        }
+
+        public TextInputLayout getPasswordTextLayout() {
+            return passwordTextLayout;
+        }
+
+        public TextInputLayout getConfirmPasswordTextLayout() {
+            return confirmPasswordTextLayout;
+        }
+
+        public TextInputLayout getUserNameTextLayout() {
+            return userNameTextLayout;
+        }
+
+        public TextInputLayout getParentEmailTextLayout() {
+            return parentEmailTextLayout;
+        }
+
+        public void setParent(Boolean parent) {
+            isParent = parent;
         }
 
         public boolean verifyInputData() {
@@ -307,20 +321,20 @@ public class Register extends AppCompatActivity {
         }
 
         public String getUserName() {
-            return userNameTextLayout.getEditText().getText().toString();
+            return Objects.requireNonNull(userNameTextLayout.getEditText()).getText().toString();
         }
 
         public String getEmail() {
-            return emailTextLayout.getEditText().getText().toString();
+            return Objects.requireNonNull(emailTextLayout.getEditText()).getText().toString();
         }
 
         public String getPassword() {
-            return passwordTextLayout.getEditText().getText().toString();
+            return Objects.requireNonNull(passwordTextLayout.getEditText()).getText().toString();
 
         }
 
         public String getParentEmail() {
-            return isChild() ? parentEmailTextLayout.getEditText().getText().toString() : null;
+            return isChild() ? Objects.requireNonNull(parentEmailTextLayout.getEditText()).getText().toString() : "";
         }
 
 
