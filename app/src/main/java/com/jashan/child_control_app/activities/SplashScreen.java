@@ -46,7 +46,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onSuccess(User user) {
                 // User exist. Go to Homepage
-                ActivityTransition.fetchUserDetailsAndGoToHomePage(SplashScreen.this, progressBar, pref);
+                ActivityTransition.goToUserHomepage(SplashScreen.this, user, pref, progressBar);
             }
 
             @Override

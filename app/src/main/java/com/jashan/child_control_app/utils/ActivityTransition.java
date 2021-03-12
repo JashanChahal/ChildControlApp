@@ -43,11 +43,8 @@ public class ActivityTransition {
         webService.getCurrentUserAndDo(new AfterCompletion<User>() {
             @Override
             public void onSuccess(User user) {
-                setSharedPreferences(user, pref);
-                goToHomepage(context, user);
-                progressBar.setVisibility(View.GONE);
+                goToUserHomepage(context,user,pref,progressBar);
             }
-
             @Override
             public void onFailure(Exception e) {
                 Toast.makeText(context, "No User found!", Toast.LENGTH_LONG);
@@ -56,7 +53,11 @@ public class ActivityTransition {
 
 
     }
-
+    public static void goToUserHomepage(Activity context, User user, SharedPreferences pref, ProgressBar progressBar) {
+        setSharedPreferences(user, pref);
+        goToHomepage(context, user);
+        progressBar.setVisibility(View.GONE);
+    }
     private static void setSharedPreferences(User user, SharedPreferences pref) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("userName", user.getUserName());
