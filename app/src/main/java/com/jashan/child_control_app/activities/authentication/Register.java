@@ -150,6 +150,9 @@ public class Register extends AppCompatActivity {
 
         SharedPreferences.Editor editor = pref.edit();
 
+        editor.clear();
+        editor.commit();
+
         editor.putString("userName", inputData.getUserName());
         editor.putString("password", inputData.getPassword());
         editor.putString("userEmail", inputData.getEmail());
@@ -163,6 +166,8 @@ public class Register extends AppCompatActivity {
         }
 
         editor.apply();
+
+
     }
 
     private void registerParentAndRedirect(Parent parent, String password) {
