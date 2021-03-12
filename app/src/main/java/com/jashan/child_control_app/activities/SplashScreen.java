@@ -38,7 +38,7 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void transitionToMainAppPageAfter(int time) {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> goToMainAppActivity(), time);
+        new Handler(Looper.getMainLooper()).postDelayed(this::goToMainAppActivity, time);
     }
 
     private void goToMainAppActivity() {
