@@ -1,9 +1,14 @@
 package com.jashan.child_control_app.repository;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -12,13 +17,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.jashan.child_control_app.activities.authentication.Login;
 import com.jashan.child_control_app.model.Child;
 import com.jashan.child_control_app.model.Parent;
 import com.jashan.child_control_app.model.User;
+import com.jashan.child_control_app.utils.ActivityTransition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class FirebaseWebService implements WebService {
     private final FirebaseAuth mAuth;
@@ -30,7 +38,6 @@ public class FirebaseWebService implements WebService {
 
     public FirebaseWebService() {
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
 
 
@@ -38,6 +45,7 @@ public class FirebaseWebService implements WebService {
 
     @Override
     public void getCurrentUserAndDo(AfterCompletion<User> afterCompletion) {
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             afterCompletion.onFailure(new UserNotFoundException("User does not exists"));
             return;
@@ -106,7 +114,30 @@ public class FirebaseWebService implements WebService {
     }
 
     @Override
-    public void signIn(String email, String password) {
+    public void signIn(String email, String password, AfterCompletion<User> afterCompletion) {
+        Log.v("Email",email);
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            getCurrentUserAndDo(new AfterCompletion<User>() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    afterCompletion.onSuccess(user);
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    afterCompletion.onFailure(new UserNotFoundException());
+                                }
+                            });
+
+                        } else {
+                            afterCompletion.onFailure(new UserNotFoundException());
+                          }
+                    }
+                });
     }
 
     @Override
