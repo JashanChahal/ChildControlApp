@@ -13,12 +13,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +31,9 @@ import com.jashan.child_control_app.repository.AfterCompletion;
 import com.jashan.child_control_app.repository.FirebaseWebService;
 import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.ActivityTransition;
+import com.jashan.child_control_app.utils.Configuration;
 import com.jashan.child_control_app.utils.TextValidator;
+import com.jashan.child_control_app.utils.ValidateInput;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +49,6 @@ public class Register extends AppCompatActivity {
     private RadioButton radioParent;
     private RadioButton radiochild;
     private RadioGroup radioGroup;
-    private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private SharedPreferences pref;
     private WebService webService;
@@ -64,66 +61,23 @@ public class Register extends AppCompatActivity {
         setParentFormElements();
         setChildFormElements();
 
-        radioParent = (RadioButton) findViewById(R.id.radioparent);
-        radiochild = (RadioButton) findViewById(R.id.radiochild);
-        radioGroup = (RadioGroup) findViewById(R.id.radioparentchild);
+        radioParent = findViewById(R.id.radioparent);
+        radiochild = findViewById(R.id.radiochild);
+        radioGroup = findViewById(R.id.radioparentchild);
 
         validateListeners();
 
-        mAuth = FirebaseAuth.getInstance();
-        pref = getSharedPreferences("com.jashan.users", MODE_PRIVATE);
-        webService = new FirebaseWebService();
+        pref = getSharedPreferences(Configuration.getSharedPreferenceFileLocation(), MODE_PRIVATE);
+        webService = Configuration.getWebservice();
     }
 
     private void validateListeners() {
-        addEmailListener(formElements.get("EMAIL"));
-        addEmailListener(formElements.get("PARENT_EMAIL"));
-        addValidateListener(formElements.get("PASSWORD"), 5, "Password");
-        addMatchPasswordListener(formElements.get("CONFIRM_PASSWORD"));
+        ValidateInput.addEmailListener(formElements.get("EMAIL"));
+        ValidateInput.addEmailListener(formElements.get("PARENT_EMAIL"));
+        ValidateInput.addValidateListener(formElements.get("PASSWORD"), 5, "Password");
+        ValidateInput.addMatchPasswordListener(formElements.get("CONFIRM_PASSWORD"), formElements.get("PASSWORD"));
     }
 
-    public void addEmailListener(TextInputLayout emailTextLayout) {
-        String emailRegex = "^(.+)@(.+)$";
-        Pattern emailPattern = Pattern.compile(emailRegex);
-        emailTextLayout.getEditText().addTextChangedListener(new TextValidator(emailTextLayout.getEditText(), emailTextLayout) {
-            @Override
-            public void validate(TextInputLayout layout, String text) {
-                Matcher matcher = emailPattern.matcher(text);
-                if (matcher.matches()) {
-                    layout.setError(null);
-                } else {
-                    layout.setErrorEnabled(false);
-                }
-            }
-        });
-    }
-
-    public void addValidateListener(TextInputLayout userNameTextLayout, int minimumCharacter, String nameOfLayout) {
-        userNameTextLayout.getEditText().addTextChangedListener(new TextValidator(userNameTextLayout.getEditText(), userNameTextLayout) {
-            @Override
-            public void validate(TextInputLayout layout, String text) {
-                if (text == null || text.length() < minimumCharacter) {
-                    layout.setError(nameOfLayout + " should be atleast " + minimumCharacter + " character long");
-                } else {
-                    layout.setErrorEnabled(false);
-                }
-            }
-        });
-    }
-
-    public void addMatchPasswordListener(TextInputLayout confirmPasswordTextLayout) {
-        confirmPasswordTextLayout.getEditText().addTextChangedListener(new TextValidator(confirmPasswordTextLayout.getEditText(), confirmPasswordTextLayout) {
-            @Override
-            public void validate(TextInputLayout layout, String text) {
-                String match = formElements.get("PASSWORD").getEditText().getText().toString();
-                if (text == null || !text.equals(match)) {
-                    layout.setError("Password donot match");
-                } else {
-                    layout.setErrorEnabled(false);
-                }
-            }
-        });
-    }
 
     public void registerUser(View view) {
 
@@ -132,24 +86,14 @@ public class Register extends AppCompatActivity {
             return;
         }
 
-        InputData inputData;
-
-        if (isSelected(radioParent)) {
-            inputData = new InputData(true);
-
-        } else {
-            inputData = new InputData(false);
-
-        }
-
+        InputData inputData = isSelected(radioParent) ? new InputData(true)
+                                                      : new InputData(false);
         if (!inputData.verifyInputData()) {
             Log.v("VERIFIED", "Data not verified");
             return;
         }
 
-
         SharedPreferences.Editor editor = pref.edit();
-
         editor.clear();
         editor.commit();
 
@@ -166,8 +110,6 @@ public class Register extends AppCompatActivity {
         }
 
         editor.apply();
-
-
     }
 
     private void registerParentAndRedirect(Parent parent, String password) {
@@ -374,11 +316,6 @@ public class Register extends AppCompatActivity {
 
         public String getPassword() {
             return passwordTextLayout.getEditText().getText().toString();
-
-        }
-
-        public String getConfirmPassword() {
-            return confirmPasswordTextLayout.getEditText().getText().toString();
 
         }
 
