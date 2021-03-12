@@ -14,9 +14,9 @@ public class ValidateInput {
             public void validate(TextInputLayout layout, String text) {
                 Matcher matcher = emailPattern.matcher(text);
                 if (matcher.matches()) {
-                    layout.setError(null);
-                } else {
                     layout.setErrorEnabled(false);
+                } else {
+                    layout.setError("Type a valid email");
                 }
             }
         });
@@ -42,7 +42,7 @@ public class ValidateInput {
             public void validate(TextInputLayout layout, String text) {
                 String match = password.getEditText().getText().toString();
                 if (text == null || !text.equals(match)) {
-                    layout.setError("Password donot match");
+                    layout.setError("Password does not match");
                 } else {
                     layout.setErrorEnabled(false);
                 }
