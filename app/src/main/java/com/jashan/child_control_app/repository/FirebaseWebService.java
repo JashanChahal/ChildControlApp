@@ -25,8 +25,9 @@ public class FirebaseWebService implements WebService {
     private FirebaseUser currentUser;
     private final FirebaseDatabase database;
     private AuthenticationDetails authenticationDetails;
-    private static  User user;
-    private  Query query;
+    private static User user;
+    private Query query;
+
     public FirebaseWebService() {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -38,6 +39,10 @@ public class FirebaseWebService implements WebService {
     @Override
     public void getCurrentUserAndDo(AfterCompletion<User> afterCompletion) {
         String uid = currentUser.getUid();
+        if (currentUser == null) {
+            afterCompletion.onFailure(new UserNotFoundException("User does not exists"));
+            return;
+        }
         DatabaseReference ref = database.getReference("users");
         // Get users/uid from firebase database
         ref.child(uid).get()
@@ -50,7 +55,7 @@ public class FirebaseWebService implements WebService {
                             }
                             afterCompletion.onSuccess(FirebaseWebService.user);
                         }
-                ).addOnFailureListener(afterCompletion :: onFailure);
+                ).addOnFailureListener(afterCompletion::onFailure);
     }
 
     @Override
@@ -60,10 +65,9 @@ public class FirebaseWebService implements WebService {
 
     @Override
     public WebService queryByKeyValue(String key, String value) {
-        Query query = new Query(key,value);
+        Query query = new Query(key, value);
         return this;
     }
-
 
 
     @Override
@@ -76,25 +80,26 @@ public class FirebaseWebService implements WebService {
     public void addAfterCompletion(AfterCompletion<User> afterCompletion) {
         mAuth.createUserWithEmailAndPassword(authenticationDetails.getUser().getUserEmail(), authenticationDetails.getPassword())
                 .addOnCompleteListener((task) -> {
-                        if (task.isSuccessful()) {
-                            FirebaseUser currentUser = mAuth.getCurrentUser();
-                            User user = authenticationDetails.getUser();
-                            user.setUserId(currentUser.getUid());
+                    if (task.isSuccessful()) {
+                        FirebaseUser currentUser = mAuth.getCurrentUser();
+                        User user = authenticationDetails.getUser();
+                        user.setUserId(currentUser.getUid());
 
-                            writeUserToDataBase(user);
+                        writeUserToDataBase(user);
 
-                            afterCompletion.onSuccess(user);
-                        } else {
-                            afterCompletion.onFailure(new IllegalArgumentException("User not created"));
+                        afterCompletion.onSuccess(user);
+                    } else {
+                        afterCompletion.onFailure(new IllegalArgumentException("User not created"));
 
-                        }
-                    });
+                    }
+                });
     }
 
     private void writeUserToDataBase(User user) {
         DatabaseReference ref = database.getReference();
         ref.child("users").child(user.getUserId()).setValue(user);
     }
+
     @Override
     public void updateUser(User user) {
 
