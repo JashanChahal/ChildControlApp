@@ -1,6 +1,5 @@
 package com.jashan.child_control_app.activities.authentication;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,11 +14,6 @@ import android.widget.Toast;
 
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
 import com.jashan.child_control_app.activities.child.ChildHomepage;
@@ -34,9 +28,7 @@ import com.jashan.child_control_app.utils.Configuration;
 import com.jashan.child_control_app.utils.ValidateInput;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -47,7 +39,6 @@ public class Register extends AppCompatActivity {
     private RadioButton radioParent;
     private RadioButton radiochild;
     private RadioGroup radioGroup;
-    public DatabaseReference mDatabase;
     private SharedPreferences pref;
     private WebService webService;
 
@@ -55,6 +46,7 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         setFormElements();
         setParentFormElements();
         setChildFormElements();
@@ -142,6 +134,8 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onSuccess(User user) {
                         addChildToParent((Child) user);
+                        Intent intent = new Intent(Register.this, ChildHomepage.class);
+                        startActivity(intent);
                         progressBar.setVisibility(View.GONE);
                     }
 
@@ -156,36 +150,22 @@ public class Register extends AppCompatActivity {
     }
 
     private void addChildToParent(Child child) {
-
-        webService.queryByKeyValue("userEmail",child.getParentEmail()) ;
-
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
-
-        mDatabase
-                .orderByChild("userEmail")
-                .equalTo(child.getParentEmail().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+        webService.queryUserByKeyValue("userEmail", child.getParentEmail(), new AfterCompletion<User>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.v("obj",snapshot.getChildren().iterator().next().toString());
-
-                Parent parent = snapshot.getChildren().iterator().next().getValue(Parent.class);
+            public void onSuccess(User user) {
+                Parent parent = (Parent) user;
                 if (parent != null) {
                     if (parent.getChildren() == null) {
                         parent.setChildren(new ArrayList<>());
                     }
                     parent.getChildren().add(child);
-                    Map<String, Object> update = new HashMap<>();
-                    update.put("/users/" + parent.getUserId(), parent);
-                    FirebaseDatabase.getInstance().getReference().updateChildren(update);
-
-                    Intent intent = new Intent(Register.this, ChildHomepage.class);
-                    startActivity(intent);
+                    webService.updateUser(parent);
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.v("testing", "failed");
+            public void onFailure(Exception e) {
+
             }
         });
     }
