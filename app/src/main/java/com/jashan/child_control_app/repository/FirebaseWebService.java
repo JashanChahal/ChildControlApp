@@ -1,8 +1,8 @@
 package com.jashan.child_control_app.repository;
 
+
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 
@@ -15,18 +15,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.jashan.child_control_app.activities.authentication.Login;
+
 import com.jashan.child_control_app.model.Child;
 import com.jashan.child_control_app.model.Parent;
 import com.jashan.child_control_app.model.User;
-import com.jashan.child_control_app.utils.ActivityTransition;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
+
 
 public class FirebaseWebService implements WebService {
     private final FirebaseAuth mAuth;
@@ -72,9 +69,26 @@ public class FirebaseWebService implements WebService {
     }
 
     @Override
-    public WebService queryByKeyValue(String key, String value) {
-        Query query = new Query(key, value);
-        return this;
+    public void queryUserByKeyValue(String key, String value, AfterCompletion<User> afterCompletion) {
+        DatabaseReference databaseReference = database.getReference("users");
+
+        databaseReference
+                .orderByChild(key)
+                .equalTo(value.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String type = snapshot.getChildren().iterator().next().child("type").getValue().toString();
+                Log.v("obj", type);
+                Class userClass = type.equals("Parent") ? Parent.class : Child.class;
+                User user = (User) snapshot.getChildren().iterator().next().getValue(userClass);
+                afterCompletion.onSuccess(user);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.v("testing", "failed");
+            }
+        });
     }
 
 
@@ -110,12 +124,15 @@ public class FirebaseWebService implements WebService {
 
     @Override
     public void updateUser(User user) {
+        Map<String, Object> update = new HashMap<>();
+        update.put("/users/" + user.getUserId(), user);
+        FirebaseDatabase.getInstance().getReference().updateChildren(update);
 
     }
 
     @Override
     public void signIn(String email, String password, AfterCompletion<User> afterCompletion) {
-        Log.v("Email",email);
+        Log.v("Email", email);
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
@@ -135,7 +152,7 @@ public class FirebaseWebService implements WebService {
 
                         } else {
                             afterCompletion.onFailure(new UserNotFoundException());
-                          }
+                        }
                     }
                 });
     }
