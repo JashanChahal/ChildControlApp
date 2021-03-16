@@ -2,12 +2,14 @@ package com.jashan.child_control_app.model;
 
 import androidx.annotation.NonNull;
 
+
 public class Child implements User {
     private String userName;
     private String userEmail;
     private String parentEmail;
     private String type;
     private String userId;
+    private ChildInformation childInformation;
 
     public Child(String name, String email, String parentEmail, String userId) {
         this.userName = name;
@@ -15,6 +17,7 @@ public class Child implements User {
         this.parentEmail = parentEmail;
         this.userId = userId;
         this.type = "Child";
+        this.childInformation = null;
     }
 
     public Child(String name, String email, String parentEmail) {
@@ -27,6 +30,18 @@ public class Child implements User {
     @Override
     public String getUserId() {
         return this.userId;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public ChildInformation getChildInformation() {
+        return childInformation;
+    }
+
+    public void setChildInformation(ChildInformation childInformation) {
+        this.childInformation = childInformation;
     }
 
     @Override
