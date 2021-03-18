@@ -3,8 +3,8 @@
     package="com.jashan.child_control_app">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChildControlApp">
+        <activity android:name=".activities.parent.CallLogsActivity"></activity>
         <activity android:name=".activities.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,8 +25,7 @@
         <activity android:name=".activities.child.ChildHomepage" />
         <activity android:name=".activities.authentication.Register" />
         <activity android:name=".activities.authentication.Login" />
-        <activity android:name=".activities.StartUp">
-        </activity>
+        <activity android:name=".activities.StartUp"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
