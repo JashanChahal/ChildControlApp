@@ -146,6 +146,8 @@ public class FirebaseWebService implements WebService {
 
                                 @Override
                                 public void onFailure(Exception e) {
+                                    Log.v("UserNotFound","Current not found");
+                                    signOut();
                                     afterCompletion.onFailure(new UserNotFoundException());
                                 }
                             });
