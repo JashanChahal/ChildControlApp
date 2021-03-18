@@ -1,5 +1,6 @@
 package com.jashan.child_control_app.activities.parent;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -81,6 +83,7 @@ public class FragmentDashboard extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 Log.e("FragmentDashboard", "No user found error");
+                renderChildrenCards(true);
             }
         });
     }
@@ -99,6 +102,16 @@ public class FragmentDashboard extends Fragment {
         for (Child child : children) {
             View card = getLayoutInflater().inflate(R.layout.card_child, null, false);
             TextView textView = card.findViewById(R.id.card_title);
+            AppCompatButton callLogs = card.findViewById(R.id.call_logs_btn);
+
+            callLogs.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(),CallLogsActivity.class);
+                    intent.putExtra("ChildInformation",child.getChildInformation());
+                    startActivity(intent);
+                }
+            });
             textView.setText(child.getUserName());
             linearLayout.addView(card);
         }
