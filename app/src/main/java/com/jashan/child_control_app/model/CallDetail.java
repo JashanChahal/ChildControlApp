@@ -1,7 +1,9 @@
 package com.jashan.child_control_app.model;
 
 
-public class CallDetail {
+import java.io.Serializable;
+
+public class CallDetail implements Serializable {
     private String phoneNumber;
     private String name;
     private String date;

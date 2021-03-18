@@ -1,8 +1,9 @@
 package com.jashan.child_control_app.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ChildInformation {
+public class ChildInformation implements Serializable {
     private List<CallDetail> callDetails;
 
     public ChildInformation(List<CallDetail> callDetails) {
