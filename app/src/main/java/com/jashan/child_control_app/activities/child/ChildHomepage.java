@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
+import com.jashan.child_control_app.activities.parent.CallLogsActivity;
 import com.jashan.child_control_app.model.CallDetail;
 import com.jashan.child_control_app.model.Child;
 import com.jashan.child_control_app.model.ChildInformation;
@@ -48,15 +49,16 @@ public class ChildHomepage extends AppCompatActivity {
                 query(CallLog.Calls.CONTENT_URI,null,null,null);
         cursor.moveToLast();
         List<CallDetail> callDetailList = new ArrayList<>();
-        while (cursor.moveToPrevious() && LOG_COUNT > 0 ) {
-            String name = getCallAttribute(cursor,"name");
-            String number = getCallAttribute(cursor,"formatted_number");
-            String duration = getCallAttribute(cursor,"duration");
-            String date = formatDate(getCallAttribute(cursor,"date"));
-            CallDetail callDetail = new CallDetail(number,name,date, duration);
+        do  {
+            String name = getCallAttribute(cursor,CallLog.Calls.CACHED_NAME);
+            String number = getCallAttribute(cursor,CallLog.Calls.CACHED_FORMATTED_NUMBER);
+            String duration = getCallAttribute(cursor,CallLog.Calls.DURATION);
+            String date = formatDate(getCallAttribute(cursor, CallLog.Calls.DATE));
+            String callType = getCallAttribute(cursor,CallLog.Calls.TYPE);
+            CallDetail callDetail = new CallDetail(number,name,date, duration,callType);
             callDetailList.add(callDetail);
             LOG_COUNT--;
-        }
+        } while (cursor.moveToPrevious() && LOG_COUNT > 0 );
         updateCallDetails(callDetailList);
         cursor.close();
     }
