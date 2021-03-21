@@ -8,15 +8,25 @@ public class CallDetail implements Serializable {
     private String name;
     private String date;
     private String duration;
+    private String callType;
 
-    public CallDetail(String phoneNumber, String name, String date, String duration) {
+    public CallDetail(String phoneNumber, String name, String date, String duration, String callType) {
         this.phoneNumber = phoneNumber;
         this.name = name == null ? "Unknown" : name;
         this.date = date;
         this.duration = duration;
+        this.callType = callType;
     }
 
     public CallDetail() {
+    }
+
+    public String getCallType() {
+        return callType;
+    }
+
+    public void setCallType(String callType) {
+        this.callType = callType;
     }
 
     public String getPhoneNumber() {
@@ -42,7 +52,13 @@ public class CallDetail implements Serializable {
     public String getDuration() {
         return duration;
     }
+    public String getFormatedDuration() {
+        int durationInt = Integer.parseInt(duration);
+        int durationMin = durationInt / 60 ;
+        int durationSec = durationInt % 60;
 
+        return  durationMin + "min, "+ durationSec+"sec";
+    }
     public void setDuration(String duration) {
         this.duration = duration;
     }
