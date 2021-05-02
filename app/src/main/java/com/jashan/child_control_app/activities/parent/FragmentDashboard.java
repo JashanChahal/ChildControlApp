@@ -101,7 +101,9 @@ public class FragmentDashboard extends Fragment {
         linearLayout.removeAllViews();
         for (Child child : children) {
             View card = getLayoutInflater().inflate(R.layout.card_child, null, false);
-            TextView textView = card.findViewById(R.id.card_title);
+            TextView cardTitle = card.findViewById(R.id.card_title);
+            TextView cardEmail = card.findViewById(R.id.card_email);
+
             AppCompatButton callLogs = card.findViewById(R.id.call_logs_btn);
 
             callLogs.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +114,8 @@ public class FragmentDashboard extends Fragment {
                     startActivity(intent);
                 }
             });
-            textView.setText(child.getUserName());
+            cardEmail.setText(child.getUserEmail());
+            cardTitle.setText(child.getUserName());
             linearLayout.addView(card);
         }
     }

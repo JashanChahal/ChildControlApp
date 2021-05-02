@@ -37,13 +37,13 @@ public class FirebaseWebService implements WebService {
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
-
     }
 
     @Override
     public void getCurrentUserAndDo(AfterCompletion<User> afterCompletion) {
         currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
+            Log.e("FirebaseService","current User NULL");
             afterCompletion.onFailure(new UserNotFoundException("User does not exists"));
             return;
         }

@@ -51,7 +51,7 @@ public class ChildHomepage extends AppCompatActivity {
         List<CallDetail> callDetailList = new ArrayList<>();
         do  {
             String name = getCallAttribute(cursor,CallLog.Calls.CACHED_NAME);
-            String number = getCallAttribute(cursor,CallLog.Calls.CACHED_FORMATTED_NUMBER);
+            String number = getCallAttribute(cursor,CallLog.Calls.NUMBER);
             String duration = getCallAttribute(cursor,CallLog.Calls.DURATION);
             String date = formatDate(getCallAttribute(cursor, CallLog.Calls.DATE));
             String callType = getCallAttribute(cursor,CallLog.Calls.TYPE);
