@@ -15,6 +15,8 @@ import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.repository.NotificationService;
 import com.jashan.child_control_app.utils.Configuration;
 
+import org.json.JSONObject;
+
 public class FragmentSettings extends Fragment {
 
     private Button notificationButton;
@@ -42,6 +44,6 @@ public class FragmentSettings extends Fragment {
 
         Log.d("first func","inside sendNoti");
 
-        notificationService.send("SS",getActivity().getApplicationContext());
+        notificationService.send("AU", "", new JSONObject(),getActivity().getApplicationContext());
     }
 }
