@@ -3,6 +3,8 @@ package com.jashan.child_control_app.activities.parent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -13,6 +15,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
 
+
+import com.jashan.child_control_app.repository.FirebaseMessagingService;
+import com.jashan.child_control_app.repository.NotificationService;
 import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.Configuration;
 
@@ -20,6 +25,8 @@ import java.util.Objects;
 
 public class ParentHomepage extends AppCompatActivity {
     private WebService webService;
+    private NotificationService notificationService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +42,16 @@ public class ParentHomepage extends AppCompatActivity {
 
         webService = Configuration.getWebservice();
         setListenerOnLogoutButton();
-    }
+        openNotificationChannel();
 
+        webService = Configuration.getWebservice();
+        setListenerOnLogoutButton();
+
+        notificationService = Configuration.getNotificationService();
+//        notificationService.subscribeToNotificationTopic("parentClient/"+webService.getCurrentUser().getUserEmail());
+        notificationService.subscribeToNotificationTopic("client");
+
+    }
 
 
     private void setListenerOnLogoutButton() {
@@ -75,4 +90,12 @@ public class ParentHomepage extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, Objects.requireNonNull(selectedFragment)).commit();
         return true;
     };
+
+
+    private void openNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel("mychannel", "mychannel", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(channel);
+    }
+
 }

@@ -27,6 +27,17 @@
         <activity android:name=".activities.authentication.Login" />
         <activity android:name=".activities.StartUp"></activity>
 
+<<<<<<< HEAD
+=======
+        <service
+            android:name=".repository.FirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+>>>>>>> testbranch
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

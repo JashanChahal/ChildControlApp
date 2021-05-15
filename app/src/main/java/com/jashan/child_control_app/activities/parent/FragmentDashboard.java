@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -23,6 +24,8 @@ import com.jashan.child_control_app.model.Child;
 import com.jashan.child_control_app.model.Parent;
 import com.jashan.child_control_app.model.User;
 import com.jashan.child_control_app.repository.AfterCompletion;
+
+import com.jashan.child_control_app.repository.NotificationService;
 import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.Configuration;
 
@@ -104,6 +107,7 @@ public class FragmentDashboard extends Fragment {
             TextView cardTitle = card.findViewById(R.id.card_title);
             TextView cardEmail = card.findViewById(R.id.card_email);
 
+
             AppCompatButton callLogs = card.findViewById(R.id.call_logs_btn);
 
             callLogs.setOnClickListener(new View.OnClickListener() {
@@ -119,4 +123,5 @@ public class FragmentDashboard extends Fragment {
             linearLayout.addView(card);
         }
     }
+
 }

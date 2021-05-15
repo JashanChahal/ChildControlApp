@@ -43,7 +43,8 @@ public class FirebaseWebService implements WebService {
     public void getCurrentUserAndDo(AfterCompletion<User> afterCompletion) {
         currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Log.e("FirebaseService","current User NULL");
+            Log.e("FirebaseService", "current User NULL");
+
             afterCompletion.onFailure(new UserNotFoundException("User does not exists"));
             return;
         }
@@ -146,7 +147,7 @@ public class FirebaseWebService implements WebService {
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    Log.v("UserNotFound","Current not found");
+                                    Log.v("UserNotFound", "Current not found");
                                     signOut();
                                     afterCompletion.onFailure(new UserNotFoundException());
                                 }
@@ -162,6 +163,12 @@ public class FirebaseWebService implements WebService {
     @Override
     public void signOut() {
         mAuth.signOut();
+    }
+
+
+    @Override
+    public User getCurrentUser() {
+        return user;
     }
 
     private static class AuthenticationDetails {
@@ -212,4 +219,5 @@ public class FirebaseWebService implements WebService {
             this.value = value;
         }
     }
+
 }
