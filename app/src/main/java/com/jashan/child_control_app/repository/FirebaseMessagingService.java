@@ -1,12 +1,11 @@
 package com.jashan.child_control_app.repository;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
-import android.location.Location;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
 import com.google.android.gms.location.LocationServices;
@@ -24,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.firebase.messaging.RemoteMessage;
 import com.jashan.child_control_app.activities.parent.AppUsageStat;
+import com.jashan.child_control_app.activities.parent.Screenshot;
 import com.jashan.child_control_app.model.UsageStatsWrapper;
 
 import java.util.HashMap;
@@ -62,6 +62,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             AppUsageStat appUsageStat = new AppUsageStat(this);
             List<UsageStatsWrapper> usageData = appUsageStat.retrieveUsageStats();
             sendAppUsageStaticInfo(usageData);
+        }
+        if(remoteMessage.getData().get("title").equals("SS")){
+            Intent intent=new Intent(this, Screenshot.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
 
     }

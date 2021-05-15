@@ -44,6 +44,6 @@ public class FragmentSettings extends Fragment {
 
         Log.d("first func","inside sendNoti");
 
-        notificationService.send("AU", "", new JSONObject(),getActivity().getApplicationContext());
+        notificationService.send("SS", "", new JSONObject(),getActivity().getApplicationContext());
     }
 }
