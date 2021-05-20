@@ -25,8 +25,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.firebase.messaging.RemoteMessage;
 import com.jashan.child_control_app.activities.parent.AppUsageStat;
-import com.jashan.child_control_app.activities.parent.LocationActivity;
-import com.jashan.child_control_app.activities.parent.ParentHomepage;
 import com.jashan.child_control_app.activities.parent.Screenshot;
 import com.jashan.child_control_app.model.UsageStatsWrapper;
 
