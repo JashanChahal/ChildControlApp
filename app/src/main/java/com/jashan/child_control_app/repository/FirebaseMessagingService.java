@@ -1,10 +1,12 @@
 package com.jashan.child_control_app.repository;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 
@@ -23,6 +25,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.firebase.messaging.RemoteMessage;
 import com.jashan.child_control_app.activities.parent.AppUsageStat;
+import com.jashan.child_control_app.activities.parent.LocationActivity;
+import com.jashan.child_control_app.activities.parent.ParentHomepage;
 import com.jashan.child_control_app.activities.parent.Screenshot;
 import com.jashan.child_control_app.model.UsageStatsWrapper;
 
@@ -32,6 +36,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService implements NotificationService{
 
@@ -40,33 +45,45 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     final private String serverKey = "key=" + "AAAAeaalugs:APA91bG-jfAM3S6slzjcX1AwCeC26c2ZnEJ9-3CU1vdnMjdWgjDXI0u8LmJ6nQqFym4krauxsBn5IF4BzuHpaMeTyjCp_8bRJ_iQrzbla9C3vIwhJX7ljT_NhJduZZf1Xw9fIppf7i2m";
     final private String contentType = "application/json";
     public static final String TOPIC = "/topics/client";
+    private LocalBroadcastManager  broadcaster;
 
 
     public FirebaseMessagingService(){
         messagingInstance = FirebaseMessaging.getInstance();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
         Log.d("notification","notification received");
         Log.d(remoteMessage.getData().get("title"),remoteMessage.getData().toString());
+        String messageTitle = remoteMessage.getData().get("title");
 
-        if (remoteMessage.getData().get("title").equals("LL")) {
+        if (messageTitle.equals("LL")) {
             Log.d("inside","inside location call");
             send_location();
         }
-        if(remoteMessage.getData().get("title").equals("AU")){
+        if(messageTitle.equals("AU")){
             Log.d("inside","inside usage app statics");
             AppUsageStat appUsageStat = new AppUsageStat(this);
             List<UsageStatsWrapper> usageData = appUsageStat.retrieveUsageStats();
             sendAppUsageStaticInfo(usageData);
         }
-        if(remoteMessage.getData().get("title").equals("SS")){
+        if(messageTitle.equals("SS")){
             Intent intent=new Intent(this, Screenshot.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+        }
+        if (messageTitle.equals("location")) {
+            Log.d("Received", remoteMessage.getData().toString());
+            Intent intent = new Intent("openMap");
+            intent.putExtra("latitude",remoteMessage.getData().get("latitude"));
+            intent.putExtra("longitude",remoteMessage.getData().get("longitude"));
+
+            broadcaster.sendBroadcast(intent);
         }
 
     }
@@ -110,7 +127,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("notiicationStatus","success");
-                        //Toast.makeText(ParentHomepage.this, "successfully send ", Toast.LENGTH_SHORT).show();
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -133,6 +150,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
+    @SuppressLint("MissingPermission")
     private void send_location(){
         Log.d(" sv", "inside lcoation func");
         //Places.initialize(getApplicationContext(), getString(R.string.maps_api_key));
