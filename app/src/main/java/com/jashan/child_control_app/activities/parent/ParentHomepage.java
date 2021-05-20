@@ -16,7 +16,6 @@ import com.jashan.child_control_app.R;
 import com.jashan.child_control_app.activities.StartUp;
 
 
-import com.jashan.child_control_app.repository.FirebaseMessagingService;
 import com.jashan.child_control_app.repository.NotificationService;
 import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.Configuration;
@@ -48,8 +47,8 @@ public class ParentHomepage extends AppCompatActivity {
         setListenerOnLogoutButton();
 
         notificationService = Configuration.getNotificationService();
-//        notificationService.subscribeToNotificationTopic("parentClient/"+webService.getCurrentUser().getUserEmail());
         notificationService.subscribeToNotificationTopic("client");
+
 
     }
 
