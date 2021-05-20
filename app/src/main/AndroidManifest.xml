@@ -12,10 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <uses-permission
-        android:name="android.permission.PACKAGE_USAGE_STATS"
-        />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +21,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChildControlApp">
-        <activity android:name=".activities.parent.CallLogsActivity"></activity>
+        <activity android:name=".activities.parent.ChildDetailsActivity"></activity>
+        <activity android:name=".activities.parent.ScreenShotActivity" />
+        <activity android:name=".activities.parent.AppUsageActivity" />
+        <activity android:name=".activities.parent.LocationActivity" />
+        <activity android:name=".activities.parent.CallLogsActivity" />
         <activity android:name=".activities.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +41,7 @@
         <activity android:name=".activities.child.ChildHomepage" />
         <activity android:name=".activities.authentication.Register" />
         <activity android:name=".activities.authentication.Login" />
-        <activity android:name=".activities.StartUp"></activity>
+        <activity android:name=".activities.StartUp" />
 
         <service
             android:name=".repository.FirebaseMessagingService"
@@ -48,12 +49,10 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-<!--        <service>-->
-<!--            android:name = -->
-<!--            android:foregroundServiceType="mediaProjection"-->
-<!--        </service>-->
+        </service> <!-- <service> -->
+        <!-- android:name = -->
+        <!-- android:foregroundServiceType="mediaProjection" -->
+        <!-- </service> -->
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
