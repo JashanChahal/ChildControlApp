@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -25,7 +23,6 @@ import com.jashan.child_control_app.model.Parent;
 import com.jashan.child_control_app.model.User;
 import com.jashan.child_control_app.repository.AfterCompletion;
 
-import com.jashan.child_control_app.repository.NotificationService;
 import com.jashan.child_control_app.repository.WebService;
 import com.jashan.child_control_app.utils.Configuration;
 
@@ -45,13 +42,13 @@ public class FragmentDashboard extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         initialiseInstanceVariable(view);
-
         renderChildrenCards(false);
 
         setOnRefresh();
 
         return view;
     }
+
 
     private void initialiseInstanceVariable(View view) {
         linearLayout = view.findViewById(R.id.layout_list);
@@ -108,16 +105,12 @@ public class FragmentDashboard extends Fragment {
             TextView cardEmail = card.findViewById(R.id.card_email);
 
 
-            AppCompatButton callLogs = card.findViewById(R.id.call_logs_btn);
-
-            callLogs.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(),CallLogsActivity.class);
-                    intent.putExtra("ChildInformation",child.getChildInformation());
-                    startActivity(intent);
-                }
+            card.setOnClickListener((view) -> {
+                Intent intent = new Intent(getActivity(), ChildDetailsActivity.class);
+                intent.putExtra("child", child);
+                startActivity(intent);
             });
+
             cardEmail.setText(child.getUserEmail());
             cardTitle.setText(child.getUserName());
             linearLayout.addView(card);
