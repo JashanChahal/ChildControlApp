@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 
@@ -82,6 +82,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             intent.putExtra("longitude",remoteMessage.getData().get("longitude"));
 
             broadcaster.sendBroadcast(intent);
+        }
+
+        if (messageTitle.equals("UsageInfo")) {
+            Log.d("UsageInfooo", remoteMessage.getData().toString());
         }
 
     }

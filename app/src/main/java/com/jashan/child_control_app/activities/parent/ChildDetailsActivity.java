@@ -84,6 +84,7 @@ public class ChildDetailsActivity extends AppCompatActivity {
 
     private void setOnClickListeners() {
         appUsage.setOnClickListener((view) -> {
+            RequestService.appUsage(this);
 
         });
 
