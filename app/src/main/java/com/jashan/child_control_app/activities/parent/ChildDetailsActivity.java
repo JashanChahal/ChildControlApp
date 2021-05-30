@@ -85,7 +85,8 @@ public class ChildDetailsActivity extends AppCompatActivity {
     private void setOnClickListeners() {
         appUsage.setOnClickListener((view) -> {
             RequestService.appUsage(this);
-
+         Intent intent  = new Intent(this,AppUsageActivity.class);
+         startActivity(intent);
         });
 
         callLogs.setOnClickListener((view) -> {
@@ -94,7 +95,9 @@ public class ChildDetailsActivity extends AppCompatActivity {
             startActivity(intent);
 
         });
-
+        screenShot.setOnClickListener((view) ->{
+            RequestService.requestScreenShot(this);
+        });
         currentLocation.setOnClickListener((view) -> {
             progressBar.setVisibility(View.VISIBLE);
             RequestService.requestLocation(this);

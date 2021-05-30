@@ -62,17 +62,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <LinearLayout
-                android:id="@+id/linear_location"
+                android:id="@+id/app_usage_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-                <TextView
-                    android:id="@+id/app_usage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Getting Usage....."
-                    ></TextView>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
